@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-09T06:27:16.595Z",
+  "updated": "2026-11-09T06:30:17.026Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
-      "state": "working",
-      "task": "All 100 drafts in; fact-checking 116 items",
-      "progress": 45,
-      "updated": "2026-11-09T06:26:54.546Z"
+      "state": "done",
+      "task": "Phase 3 done: 112 questions, 4 rejected",
+      "progress": 100,
+      "updated": "2026-11-09T06:30:17.026Z"
     },
     {
       "id": "qw-quant",
@@ -51,10 +51,10 @@ window.AGENT_STATUS = {
       "id": "fact-checker",
       "name": "Fact Checker",
       "avatar": "🔍",
-      "state": "checking",
-      "task": "4 topic fact-checkers running",
-      "progress": 25,
-      "updated": "2026-11-09T06:26:54.525Z"
+      "state": "done",
+      "task": "All 116 checked: 112 ok, 4 flagged",
+      "progress": 100,
+      "updated": "2026-11-09T06:28:00.619Z"
     },
     {
       "id": "fun-writer",
@@ -87,19 +87,19 @@ window.AGENT_STATUS = {
       "id": "fc-verbal",
       "name": "Fact Checker · Verbal",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 50,
-      "task": "Verbal: half reviewed",
-      "updated": "2026-11-09T06:27:15.646Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Verbal: 25 ok, 3 flagged",
+      "updated": "2026-11-09T06:27:28.457Z"
     },
     {
       "id": "fc-di",
       "name": "Fact Checker · DI",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 5,
-      "task": "Verifying DI answers",
-      "updated": "2026-11-09T06:26:58.702Z"
+      "state": "done",
+      "progress": 100,
+      "task": "DI: 27 ok, 0 flagged",
+      "updated": "2026-11-09T06:27:34.932Z"
     }
   ]
 };
