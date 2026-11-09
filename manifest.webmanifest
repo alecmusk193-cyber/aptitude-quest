@@ -2,7 +2,7 @@
   "name": "Aptitude Quest",
   "short_name": "AptiQuest",
   "description": "Gamified aptitude practice: Quant, Logical, Verbal and DI. Works offline.",
-  "start_url": "./aptitude-quest.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

@@ -3,7 +3,8 @@
 // Bump CACHE when you ship changes so phones drop the old copy.
 const CACHE = "aq-v1";
 const FILES = [
-  "aptitude-quest.html",
+  "./",
+  "index.html",
   "questions.js",
   "manifest.webmanifest",
   "icons/icon-192.png",
@@ -33,7 +34,7 @@ self.addEventListener("fetch", e => {
     const net = fetch(e.request).then(res => {
       if (res.ok) cache.put(e.request, res.clone());
       return res;
-    }).catch(() => hit || (e.request.mode === "navigate" ? cache.match("aptitude-quest.html") : undefined));
+    }).catch(() => hit || (e.request.mode === "navigate" ? cache.match("index.html") : undefined));
     if (hit) { e.waitUntil(net.catch(() => {})); return hit; }
     return net;
   }));
