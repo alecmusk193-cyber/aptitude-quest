@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aptitude Quest</title>
+<style>
+:root{--bg:#12121c;--bg2:#2a1f55;--card:#1d1d2e;--opt:#2a2a40;--line:#444;--track:#0006;--accent:#7c5cff;--good:#2ecc71;--bad:#ff5c7a;--gold:#ffc94d;--text:#f2f2f7;--goodbg:#1f5e3a;--badbg:#6b2335;--shadow:#0008;color-scheme:dark}
+[data-theme=light]{--bg:#eef0f7;--bg2:#d9d0ff;--card:#fff;--opt:#f0f0f7;--line:#c8c8d8;--track:#0000001a;--text:#1c1c2b;--goodbg:#d5f5e3;--badbg:#ffdbe2;--shadow:#3a2f7a22;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% 0%,var(--bg2),var(--bg) 60%);color:var(--text);font-family:system-ui,sans-serif}
+#app{width:100%;max-width:560px;background:var(--card);border-radius:20px;padding:22px;box-shadow:0 20px 60px var(--shadow)}
+h1{margin:0;font-size:1.6rem}h2{line-height:1.35;font-size:1.25rem}
+.sub{opacity:.7;margin-top:4px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tools{display:flex;gap:6px}
+.icon{width:42px;height:42px;border-radius:12px;border:2px solid var(--line);background:transparent;font-size:1.1rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+.bar{height:10px;background:var(--track);border-radius:99px;overflow:hidden}
+.alt{padding:12px;border-radius:12px;border:2px solid var(--accent);background:transparent;font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.card{background:var(--opt);border-radius:12px;padding:10px;text-align:center}
+.big{font-size:1.2rem;font-weight:700}
+.weak,.note,.tip{margin-top:12px;padding:12px;border-radius:12px;background:var(--opt);border-left:4px solid var(--gold)}
+.weak{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tbl{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{background:var(--opt)}
+.opt kbd{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--track);font:inherit;font-size:.85rem;font-weight:700}
+.opt:disabled{cursor:default}
+.face{flex:none;position:relative;width:40px;height:40px;border-radius:50%;background:var(--gold);box-shadow:inset -3px -3px 0 #0002}
+.face::before{content:"";position:absolute;top:13px;left:11px;width:5px;height:6px;border-radius:50%;background:#222;box-shadow:13px 0 #222}
+.face::after{content:"";position:absolute;left:11px;width:18px;height:9px;border:3px solid #222}
+.face.happy::after{top:19px;border-top:0;border-radius:0 0 18px 18px}
+.face.sad::after{top:25px;border-bottom:0;border-radius:18px 18px 0 0}
+.face.wow::after{top:22px;left:15px;width:10px;height:11px;border-radius:50%}
+.lvlup{margin:10px 0;padding:12px;border-radius:12px;text-align:center;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--gold));color:#fff;animation:pop .4s}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:9}
+@media(max-width:480px){body{place-items:start center;padding:10px}#app{padding:16px;border-radius:16px}.grid2{grid-template-columns:1fr}h2{font-size:1.1rem}}
+.bar>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .4s linear}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+.main{width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;background:var(--accent);color:#fff;font-weight:700;font-size:1.05rem}
+.opt{display:flex;gap:10px;align-items:center;width:100%;min-height:52px;margin:8px 0;padding:14px;text-align:left;background:var(--opt);border:2px solid transparent;border-radius:12px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.good{background:var(--goodbg);border-color:var(--good)}
+.opt.bad{background:var(--badbg);border-color:var(--bad);animation:shake .3s}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.chip{padding:8px 14px;border-radius:99px;border:2px solid var(--line);background:transparent}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{padding:6px 10px;border-radius:10px;background:var(--opt);font-size:.85rem}
+.badge.locked{opacity:.3;filter:grayscale(1)}
+.meme{display:flex;gap:12px;align-items:center;margin-top:12px;padding:12px;border-radius:12px;font-weight:700;animation:pop .3s}
+.meme.good{background:var(--goodbg)}.meme.bad{background:var(--badbg)}
+.exp{opacity:.85}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="questions.js"></script>
+<script>
+const BANK=window.QUESTIONS||[];
+const TOPICS=["Quant","Logical","Verbal","DI"];
+const MEMES={
+good:["Big brain energy 🧠","Calculator? Never heard of her 💅","Stonks 📈","Absolute cinema 🎬","You did that. Tell your mom 🏆","Brain cells: 1, Procrastination: 0 🥊"],
+bad:["Task failed successfully 🫠","Ah yes, the classic 'I knew that' 🙃","This is fine 🔥☕ (it is not fine)","Brain.exe has stopped working 💥","Not like this 😭","Me after reading the question 5 times 👀"],
+time:["Time ran out. The clock said bye 👋⏰","You blinked. The timer didn't 😵","Thinking so hard you left the dimension 🌌"],
+near:{good:["Clutch! Answered with the clock on fumes ⏳🔥","Last-second genius. Heart rate: 180 💓","Living dangerously and still right 😅"],
+      bad:["Buzzer-beater... that missed 🏀😬","The clock pressured you and it worked 🫣","Panic mode: on. Accuracy: off 🚨"]},
+streak:{3:["Hat trick! 3 in a row 🎩","Three-peat! The brain is warming up ♨️"],
+        5:["5 in a row! You're on fire 🔥🔥","Five straight. Main character energy ✨"],
+        10:["10 IN A ROW. Unstoppable 🚀","Ten straight! Somebody call the exam board 📞"]}};
+const BADGES={
+first:{n:"First Steps",i:"🐣",d:"Get your first answer right"},
+speed:{n:"Speedrunner",i:"⚡",d:"Answer correctly in under 5 seconds"},
+fire:{n:"On Fire",i:"🔥",d:"Reach a 5x combo"},
+unstop:{n:"Unstoppable",i:"🚀",d:"Reach a 10x combo"},
+clutch:{n:"Clutch",i:"⏳",d:"Answer correctly in the last 3 seconds"},
+perfect:{n:"Perfect Run",i:"💎",d:"Get every question right in a run of 5+"},
+comeback:{n:"Comeback Kid",i:"🔁",d:"Fix a past mistake in Review mode"},
+daily:{n:"Daily Grinder",i:"📅",d:"Complete a daily challenge"},
+streak3:{n:"Habit Hero",i:"🗓️",d:"Keep a 3-day streak"},
+level5:{n:"Level 5",i:"🎖️",d:"Reach level 5"}};
+const BOXW={1:16,2:8,3:4,4:2,5:1}; // Leitner: lower boxes are picked more often
+
+const $=s=>document.querySelector(s);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=(a,r=Math.random)=>a.map(x=>[r(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const lvl=xp=>Math.floor(xp/100)+1;
+const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayKey(d)};
+function seeded(str){let h=2166136261;for(const c of str)h=Math.imul(h^c.charCodeAt(0),16777619);
+  return()=>{h=h+0x6D2B79F5|0;let t=Math.imul(h^h>>>15,1|h);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true});
+function load(){try{return Object.assign(DEF(),JSON.parse(localStorage.getItem("aq"))||{})}catch(e){return DEF()}}
+function save(){try{localStorage.setItem("aq",JSON.stringify(P))}catch(e){}}
+let P=load(),G=null,topic="All",tick;
+const applyTheme=()=>document.documentElement.dataset.theme=P.theme;
+applyTheme();
+
+// ---- Web Audio SFX (no files) ----
+let AC;
+function tone(f,d=.12,type="sine",when=0,vol=.15){if(!P.sound)return;try{
+  AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();
+  const t=AC.currentTime+when,o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+const SFX={good:()=>{tone(660,.1,"triangle");tone(880,.16,"triangle",.09)},
+  bad:()=>{tone(220,.18,"sawtooth",0,.07);tone(150,.28,"sawtooth",.15,.07)},
+  tick:()=>tone(1000,.04,"square",0,.05),click:()=>tone(520,.05,"sine",0,.08),
+  badge:()=>{tone(988,.08);tone(1319,.22,"sine",.08)},
+  level:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.2,"triangle",i*.11))};
+
+// ---- Canvas confetti (no libs) ----
+function confetti(){const c=document.createElement("canvas"),x=c.getContext("2d");if(!x)return;
+  c.className="confetti";document.body.appendChild(c);const W=c.width=innerWidth,H=c.height=innerHeight;
+  const cols=["#7c5cff","#ffc94d","#2ecc71","#ff5c7a","#4dd0ff"];
+  const ps=Array.from({length:160},()=>({x:W/2,y:H/3,vx:(Math.random()-.5)*14,vy:-Math.random()*12-4,s:Math.random()*6+4,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:pick(cols)}));
+  const t0=performance.now();
+  (function f(t){x.clearRect(0,0,W,H);ps.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+    x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});
+    if(t-t0<3000)requestAnimationFrame(f);else c.remove()})(t0)}
+
+function award(k){if(!P.badges.includes(k)){P.badges.push(k);G.new.push(k)}}
+function bumpStreak(){const t=dayKey();if(P.streak.last===t)return;P.streak.n=P.streak.last===yesterday()?P.streak.n+1:1;P.streak.last=t}
+const curStreak=()=>P.streak.last===dayKey()||P.streak.last===yesterday()?P.streak.n:0;
+function rec(q,ok,secs){const s=P.stats[q.topic]||(P.stats[q.topic]={n:0,r:0,t:0});s.n++;if(ok)s.r++;s.t+=secs;
+  const b=P.box[q.id];if(!ok)P.box[q.id]=1;else if(b){if(b>=5)delete P.box[q.id];else P.box[q.id]=b+1}}
+function weakest(){let w=null;TOPICS.forEach(t=>{const s=P.stats[t];if(!s||s.n<3||!BANK.some(q=>q.topic===t))return;
+  const acc=s.r/s.n,avg=s.t/s.n;if(!w||acc<w.acc||(acc===w.acc&&avg>w.avg))w={t,acc,avg}});return w}
+function reviewPick(n){const pool=BANK.filter(q=>P.box[q.id]).map(q=>({q,w:BOXW[P.box[q.id]]||1})),out=[];
+  while(out.length<n&&pool.length){let r=Math.random()*pool.reduce((s,p)=>s+p.w,0),i=0;
+    while(i<pool.length-1&&(r-=pool[i].w)>0)i++;out.push(pool[i].q);pool.splice(i,1)}return out}
+const table=d=>`<div class="tbl"><table><thead><tr>${d.headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${d.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+function statsTable(){return table({headers:["Topic","Accuracy","Avg time","Answered"],rows:TOPICS.map(t=>{const s=P.stats[t];
+  return s?[t,Math.round(s.r/s.n*100)+"%",(s.t/s.n).toFixed(1)+"s",s.n]:[t,"–","–",0]})})}
+function toggleTheme(){P.theme=P.theme==="light"?"dark":"light";applyTheme();save();home()}
+function toggleSound(){P.sound=!P.sound;save();SFX.click();home()}
+
+function home(msg){
+  clearInterval(tick);if(G)G.over=true;
+  const w=weakest(),due=BANK.filter(q=>P.box[q.id]).length,dd=P.daily.date===dayKey();
+  $("#app").innerHTML=`
+  <div class="top"><h1>🧠 Aptitude Quest</h1><div class="tools">
+    <button class="icon" onclick="toggleSound()" title="Sound on/off" aria-label="Toggle sound">${P.sound?"🔊":"🔇"}</button>
+    <button class="icon" onclick="toggleTheme()" title="Dark/light" aria-label="Toggle theme">${P.theme==="light"?"🌙":"☀️"}</button></div></div>
+  <p class="sub">Study hard. Meme harder.</p>
+  ${msg?`<div class="note">${msg}</div>`:""}
+  <div class="row"><b>Level ${lvl(P.xp)}</b><span>${P.xp} XP</span></div>
+  <div class="bar"><div style="width:${P.xp%100}%"></div></div>
+  <div class="cards">
+    <div class="card"><div class="big">🔥 ${curStreak()}</div><small>day streak</small></div>
+    <div class="card"><div class="big">🏆 ${P.best}</div><small>best run XP</small></div>
+    <div class="card"><div class="big">📚 ${due}</div><small>to review</small></div></div>
+  <div class="chips">${["All",...TOPICS].map(t=>`<button class="chip ${t===topic?"on":""}" onclick="topic='${t}';home()">${t}</button>`).join("")}</div>
+  <button class="main" onclick="start()">Start Quest ▶</button>
+  <div class="grid2">
+    <button class="alt" onclick="start('daily')">📅 Daily challenge${dd?` ✓ ${P.daily.score}/${P.daily.n}`:""}</button>
+    <button class="alt" onclick="start('review')">🔁 Review mistakes (${due})</button></div>
+  ${w?`<div class="weak"><div><b>🎯 Weakest topic: ${w.t}</b><br><small>${Math.round(w.acc*100)}% accuracy · ${w.avg.toFixed(1)}s avg</small></div>
+    <button class="alt" onclick="start('weak')">Practice weakest topic</button></div>`
+    :`<div class="weak"><small>🎯 Answer 3+ questions in a topic to unlock your weakest-topic card.</small></div>`}
+  <h3>Stats</h3>${statsTable()}
+  <h3>Badges (${P.badges.filter(k=>BADGES[k]).length}/${Object.keys(BADGES).length})</h3>
+  <div class="badges">${Object.entries(BADGES).map(([k,b])=>`<span class="badge ${P.badges.includes(k)?"":"locked"}" title="${b.d}">${b.i} ${b.n}</span>`).join("")}</div>`;
+}
+
+function start(mode="quest"){
+  let qs,label;
+  if(mode==="daily"){qs=shuffle(BANK,seeded("aq-daily-"+dayKey())).slice(0,10);label="📅 Daily"}
+  else if(mode==="review"){qs=reviewPick(10);label="🔁 Review";if(!qs.length)return home("No mistakes to review yet. Go make some! 😄")}
+  else if(mode==="weak"){const w=weakest();if(!w)return home();qs=shuffle(BANK.filter(q=>q.topic===w.t)).slice(0,10);label="🎯 "+w.t}
+  else{qs=shuffle(BANK.filter(q=>topic==="All"||q.topic===topic)).slice(0,10);label="⚔️ "+topic}
+  if(!qs.length)return home("No questions found for this topic yet.");
+  SFX.click();
+  G={mode,label,qs,i:0,lives:3,combo:0,max:0,xp:0,right:0,new:[]};
+  ask();
+}
+
+function ask(){
+  const q=G.qs[G.i];G.t=20;G.locked=false;G.t0=Date.now();
+  $("#app").innerHTML=`
+  <div class="row"><span>${G.label} · Q ${G.i+1}/${G.qs.length} · ${q.topic} ${"★".repeat(q.difficulty||1)}</span><span>${"❤️".repeat(G.lives)}${"🖤".repeat(3-G.lives)}</span></div>
+  <div class="bar"><div id="tb" style="width:100%"></div></div>
+  <div class="row"><span>⏱ <b id="tt">20</b>s</span><span>🔥 x${G.combo} · ⭐ ${G.xp}</span></div>
+  <h2>${q.q}</h2>
+  ${q.data?table(q.data):""}
+  ${q.o.map((o,k)=>`<button class="opt" onclick="answer(${k})"><kbd>${k+1}</kbd><span>${o}</span></button>`).join("")}
+  <div id="fb"></div>`;
+  clearInterval(tick);
+  tick=setInterval(()=>{G.t--;$("#tt").textContent=G.t;$("#tb").style.width=(G.t/20*100)+"%";if(G.t>0&&G.t<=3)SFX.tick();if(G.t<=0)answer(-1)},1000);
+}
+
+function answer(k){
+  if(!G||G.over||G.locked)return;G.locked=true;clearInterval(tick);
+  const q=G.qs[G.i],secs=Math.min(20,(Date.now()-G.t0)/1000),ok=k===q.a,near=k!==-1&&secs>=17;
+  const wasBoxed=!!P.box[q.id],nb=G.new.length;
+  rec(q,ok,secs);
+  document.querySelectorAll(".opt").forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("good");else if(j===k)b.classList.add("bad")});
+  let msg,face;
+  if(ok){
+    G.combo++;G.max=Math.max(G.max,G.combo);G.right++;
+    const gain=10+Math.max(0,10-Math.round(secs))+5*Math.min(G.combo-1,4);
+    G.xp+=gain;
+    award("first");if(G.combo>=5)award("fire");if(G.combo>=10)award("unstop");
+    if(secs<5)award("speed");if(near)award("clutch");if(G.mode==="review"&&wasBoxed)award("comeback");
+    msg=pick(MEMES.streak[G.combo]||(near?MEMES.near.good:MEMES.good))+` <b>+${gain} XP</b>`;
+    face=near?"wow":"happy";SFX.good();
+  }else{
+    G.lives--;G.combo=0;
+    msg=pick(k===-1?MEMES.time:near?MEMES.near.bad:MEMES.bad);
+    face=k===-1?"wow":"sad";SFX.bad();
+  }
+  save();
+  const fresh=G.new.slice(nb);if(fresh.length)setTimeout(SFX.badge,250);
+  const last=G.lives<=0||G.i===G.qs.length-1;
+  $("#fb").innerHTML=`<div class="meme ${ok?"good":"bad"}"><span class="face ${face}"></span><span>${msg}</span></div>
+  ${fresh.map(b=>`<div class="note">🏅 New badge: ${BADGES[b].i} <b>${BADGES[b].n}</b> · ${BADGES[b].d}</div>`).join("")}
+  <p class="exp">💡 ${q.e}</p>
+  ${q.tip?`<div class="tip">⚡ Shortcut: ${q.tip}</div>`:""}
+  <button class="main" id="next" onclick="next()">${last?"Finish":"Next ▶"} <small>(Enter)</small></button>`;
+}
+
+function next(){
+  if(!G||G.over||!G.locked)return;
+  G.i++;
+  if(G.lives<=0||G.i>=G.qs.length)end();else ask();
+}
+
+function end(){
+  clearInterval(tick);G.over=true;
+  const n=G.qs.length,pct=Math.round(G.right/n*100),done=G.lives>0;
+  if(pct===100&&n>=5)award("perfect");
+  if(G.mode==="daily"&&done){award("daily");const prev=P.daily.date===dayKey()?P.daily.score:0;P.daily={date:dayKey(),score:Math.max(prev,G.right),n}}
+  bumpStreak();if(P.streak.n>=3)award("streak3");
+  const before=lvl(P.xp);P.xp+=G.xp;P.best=Math.max(P.best,G.xp);
+  const up=lvl(P.xp)>before;if(lvl(P.xp)>=5)award("level5");
+  save();
+  const rank=pct>=90?"🧙 Aptitude Wizard":pct>=70?"😎 Big Brain":pct>=50?"🙂 Getting There":"🥔 Potato (with potential)";
+  $("#app").innerHTML=`
+  <h1>${done?"🎉 Quest complete":"💀 Out of lives"}</h1>
+  ${up?`<div class="lvlup">⬆️ Level up! You're now level ${lvl(P.xp)}</div>`:""}
+  <h2>${rank}</h2>
+  <p>Score: ${G.right}/${n} (${pct}%)<br>XP earned: ${G.xp}<br>Best combo: ${G.max}x<br>🔥 Day streak: ${curStreak()}</p>
+  ${G.new.length?`<p>New badges: ${G.new.map(k=>BADGES[k].i+" "+BADGES[k].n).join(", ")}</p>`:""}
+  <button class="main" onclick="start('${G.mode}')">Play again 🔁</button>
+  <button class="chip" style="margin-top:10px" onclick="home()">Home</button>`;
+  if(up){confetti();SFX.level()}
+}
+
+document.addEventListener("keydown",e=>{
+  if(!G||G.over||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(!G.locked&&e.key>="1"&&e.key<="4"){const k=+e.key-1;if(k<G.qs[G.i].o.length){e.preventDefault();answer(k)}}
+  else if(G.locked&&e.key==="Enter"){e.preventDefault();next()}
+});
+
+home();
+</script>
+</body>
+</html>
