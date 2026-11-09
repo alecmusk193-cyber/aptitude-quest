@@ -1,11 +1,12 @@
 // Aptitude Quest service worker: caches the game for offline play.
 // Only runs when the game is served over https (or localhost). It does nothing on file://.
 // Bump CACHE when you ship changes so phones drop the old copy.
-const CACHE = "aq-v1";
+const CACHE = "aq-v2";
 const FILES = [
   "./",
   "index.html",
   "questions.js",
+  "generator.js",
   "manifest.webmanifest",
   "icons/icon-192.png",
   "icons/icon-512.png",

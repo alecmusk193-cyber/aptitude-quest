@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-09T06:30:17.026Z",
+  "updated": "2026-11-09T07:19:51.387Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
       "state": "done",
-      "task": "Phase 3 done: 112 questions, 4 rejected",
+      "task": "v2 done: 156 questions + generator; 1 rejected",
       "progress": 100,
-      "updated": "2026-11-09T06:30:17.026Z"
+      "updated": "2026-11-09T07:19:51.387Z"
     },
     {
       "id": "qw-quant",
@@ -61,9 +61,9 @@ window.AGENT_STATUS = {
       "name": "Fun Writer",
       "avatar": "🎭",
       "state": "done",
-      "task": "Delivered captions, jokes, badges",
+      "task": "Delivered v2 captions",
       "progress": 100,
-      "updated": "2026-11-09T06:25:21.590Z"
+      "updated": "2026-11-09T07:05:07.523Z"
     },
     {
       "id": "fc-quant",
@@ -100,6 +100,123 @@ window.AGENT_STATUS = {
       "progress": 100,
       "task": "DI: 27 ok, 0 flagged",
       "updated": "2026-11-09T06:27:34.932Z"
+    },
+    {
+      "id": "why-quant",
+      "name": "Why Writer · Quant",
+      "avatar": "🧮",
+      "state": "done",
+      "progress": 100,
+      "task": "120 reasons written, 8 distractors replaced",
+      "updated": "2026-11-09T07:08:09.840Z"
+    },
+    {
+      "id": "why-logical",
+      "name": "Why Writer · Logical",
+      "avatar": "🧩",
+      "state": "done",
+      "progress": 100,
+      "task": "120 reasons written, 6 distractors replaced",
+      "updated": "2026-11-09T07:07:20.568Z"
+    },
+    {
+      "id": "why-verbal",
+      "name": "Why Writer · Verbal",
+      "avatar": "📖",
+      "state": "done",
+      "progress": 100,
+      "task": "100 reasons written, 3 distractors replaced",
+      "updated": "2026-11-09T07:05:52.712Z"
+    },
+    {
+      "id": "why-di",
+      "name": "Why Writer · DI",
+      "avatar": "📊",
+      "state": "done",
+      "progress": 100,
+      "task": "108 reasons written, 8 distractors replaced",
+      "updated": "2026-11-09T07:09:30.723Z"
+    },
+    {
+      "id": "sjt-writer",
+      "name": "SJT Writer",
+      "avatar": "🤝",
+      "state": "done",
+      "progress": 100,
+      "task": "Rebalanced SJT option lengths",
+      "updated": "2026-11-09T07:14:09.235Z"
+    },
+    {
+      "id": "di-writer",
+      "name": "DI Multi-step Writer",
+      "avatar": "📈",
+      "state": "done",
+      "progress": 100,
+      "task": "Delivered 20 DI questions",
+      "updated": "2026-11-09T07:09:20.540Z"
+    },
+    {
+      "id": "fc-gen",
+      "name": "Fact Checker · Generator",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "Generator checked: 14 ok, 6 flags (0 answer)",
+      "updated": "2026-11-09T07:11:05.287Z"
+    },
+    {
+      "id": "fc2-logical",
+      "name": "Fact Checker · Logical",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "logical: 29 ok, 1 flagged",
+      "updated": "2026-11-09T07:09:26.635Z"
+    },
+    {
+      "id": "fc2-verbal",
+      "name": "Fact Checker · Verbal",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "verbal: 22 ok, 3 flagged",
+      "updated": "2026-11-09T07:08:56.327Z"
+    },
+    {
+      "id": "fc2-quant",
+      "name": "Fact Checker · Quant",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "Fact Checker · Quant: 28 ok, 2 flagged",
+      "updated": "2026-11-09T07:10:21.884Z"
+    },
+    {
+      "id": "fc2-dimulti",
+      "name": "Fact Checker · DI multi-step",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "di-multi: 19 ok, 1 flagged",
+      "updated": "2026-11-09T07:10:38.984Z"
+    },
+    {
+      "id": "fc2-di",
+      "name": "Fact Checker · DI",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "Fact Checker · DI: 24 ok, 3 flagged",
+      "updated": "2026-11-09T07:11:12.404Z"
+    },
+    {
+      "id": "fc2-sjt",
+      "name": "Fact Checker · SJT",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "sjt: 25 ok, 0 flagged",
+      "updated": "2026-11-09T07:16:14.859Z"
     }
   ]
 };

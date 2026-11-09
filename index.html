@@ -54,6 +54,31 @@ th:first-child,td:first-child{position:sticky;left:0;background:var(--card);box-
 .opt kbd{flex:none;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--track);font:inherit;font-size:.85rem;font-weight:700}
 .opt:disabled{cursor:default}
 #fb{scroll-margin-bottom:110px}
+textarea{width:100%;min-height:180px;margin-top:12px;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--opt);color:var(--text);font:16px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;-webkit-user-select:text;user-select:text;resize:vertical}
+.opt.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 22%,var(--opt))}
+.pal{display:flex;gap:6px;overflow-x:auto;margin:14px 0 4px;padding:4px 2px;scrollbar-width:thin}
+.pb{flex:none;min-width:48px;height:48px;border-radius:12px;border:2px solid var(--line);background:transparent;font-weight:700}
+.pb.done{background:var(--opt);border-color:var(--accent)}.pb.cur{outline:3px solid var(--gold);outline-offset:1px}
+.clock{font-variant-numeric:tabular-nums;font-size:1.1rem;flex:none}.clock.warn{color:var(--bad)}
+.btns2{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.score{margin:12px 0;padding:14px;border-radius:14px;background:var(--opt);text-align:center}.score .big{font-size:2rem}
+.whys{list-style:none;padding:0;margin:10px 0;display:grid;gap:8px}
+.whys li{padding:10px 12px;border-radius:12px;background:var(--opt);border-left:4px solid var(--line);font-size:.95rem}
+.whys li.w-ok{border-left-color:var(--good)}.whys li.w-bad{border-left-color:var(--bad)}.whys span{opacity:.88}
+.trap{margin-top:12px;padding:12px;border-radius:12px;background:var(--badbg);border-left:4px solid var(--bad)}
+details.more,details.rv{margin-top:10px;padding:0 12px;border-radius:12px;background:var(--opt)}
+details summary{display:flex;align-items:center;gap:8px;min-height:48px;cursor:pointer;font-weight:600;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open]{padding-bottom:12px}details.more .whys li,details.rv .whys li{background:var(--card)}
+details.rv summary .grow{flex:1;min-width:0;font-weight:500;font-size:.92rem}
+#rv.only-bad .rv.ok{display:none}
+.small{font-size:.85rem;opacity:.8;font-weight:400}
+.errs{margin:6px 0 0;padding-left:18px;font-size:.88rem;-webkit-user-select:text;user-select:text}
+.warnb{border-left-color:var(--bad)}
+.lvtag{padding:1px 8px;border-radius:99px;background:var(--opt);font-size:.85rem}
+.lvchg{border-left-color:var(--accent)}
+#fb h3{margin:16px 0 4px}
+
 .face{flex:none;position:relative;width:40px;height:40px;border-radius:50%;background:var(--gold);box-shadow:inset -3px -3px 0 #0002}
 .face::before{content:"";position:absolute;top:13px;left:11px;width:5px;height:6px;border-radius:50%;background:#222;box-shadow:13px 0 #222}
 .face::after{content:"";position:absolute;left:11px;width:18px;height:9px;border:3px solid #222}
@@ -94,12 +119,22 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <body>
 <div id="app"></div>
 <script src="questions.js"></script>
+<script src="generator.js"></script>
 <script>
-const BANK=window.QUESTIONS||[];
-const TOPICS=["Quant","Logical","Verbal","DI"];
+const TOPICS=["Quant","Logical","Verbal","DI","SJT"];
+const TOPIC_NAME={Quant:"Quant",Logical:"Logical",Verbal:"Verbal",DI:"Data (DI)",SJT:"Situational (SJT)"};
+// All question text is escaped before rendering (imported questions are untrusted).
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CUSTOM_KEY="aq-custom";
+function loadCustom(){try{const a=JSON.parse(localStorage.getItem(CUSTOM_KEY));return Array.isArray(a)?a:[]}catch(e){return[]}}
+let CUSTOM=loadCustom();
+let BANK=(window.QUESTIONS||[]).concat(CUSTOM.map(q=>Object.assign({},q,{custom:true})));
+const GEN=window.QGEN||null;
 const MEMES={"good":["Big brain energy 🧠","Calculator? Never heard of her 💅","Stonks 📈","Absolute cinema 🎬","You did that. Tell your mom 🏆","Brain cells: 1, Procrastination: 0 🥊","Brain said 'I got this' and it did 🧠✨","Main character moment unlocked 🌟","No notes. Chef's kiss 👨‍🍳💋","You understood the assignment 📝✅","That answer was illegal-level smart 🚨😎","Neurons firing in 4K 🎥⚡","Certified smart cookie 🍪","Galaxy brain activated 🌌🧠","Correct! Your future self says thanks 🙏","Not a guess. Pure skill 🎯","The math is mathing today 📐💯","Slay, but make it aptitude 💅📊"],"bad":["Task failed successfully 🫠","Ah yes, the classic 'I knew that' 🙃","This is fine 🔥☕ (it is not fine)","Brain.exe has stopped working 💥","Not like this 😭","Me after reading the question 5 times 👀","Plot twist: that was not it 🌀","Oops! Every expert started here too 🌱","Wrong, but your vibes are immaculate 😌✨","Brain buffering... please try again 🔄","We don't lose, we learn. Respectfully 📚","My brain had 47 tabs open 🗂️😵","Close-ish! Next one's yours 💪","That answer was a side quest 🗺️😅","Mistakes are just XP in disguise 🎮","Not today, but definitely someday 🌅","Shake it off and lock in 🔒🧠","Even calculators need a reboot sometimes 🔌"],"time":["Time ran out. The clock said bye 👋⏰","You blinked. The timer didn't 😵","Thinking so hard you left the dimension 🌌","The timer said 'it's giving overtime' ⌛😬","Still thinking? The clock clocked out 🕰️💤","Brain loading... timer wasn't 🐢","Time's up! Deep thoughts though 🤔💭","You were vibing, the clock was not ⏱️🎶","Speedrun next time, bestie 🏃💨"],"near":{"good":["Clutch! Answered with the clock on fumes ⏳🔥","Last-second genius. Heart rate: 180 💓","Living dangerously and still right 😅","Saved by the final tick! ⏱️🙌","Cutting it close and nailing it 😤🎯","Last-moment legend behaviour 🦸⏳","The clock blinked first 😎⌛","Zero chill, full marks 🧊💯","Answered at 0.1% battery. Iconic 🔋🔥"],"bad":["Buzzer-beater... that missed 🏀😬","The clock pressured you and it worked 🫣","Panic mode: on. Accuracy: off 🚨","So close the clock felt bad 🥲⏰","Rushed it. The pressure was real 😮‍💨","Final-second gamble didn't pay 🎲😅","Clock: 1, You: 0. Rematch? ⚔️","Speed was there, accuracy took a nap 😴","Photo finish, wrong lane 📸🏁"]},"streak":{"3":["Hat trick! 3 in a row 🎩","Three-peat! The brain is warming up ♨️","Triple threat! Keep it rolling 🎲🔥","3 for 3. We see you 👀✨","Combo started! Don't stop now ▶️","Three wins. The warm-up is over 🏃‍♀️"],"5":["5 in a row! You're on fire 🔥🔥","Five straight. Main character energy ✨","5 streak! Brain is fully caffeinated ☕🧠","High five! Literally 🖐️🔥","Five in a row. Lowkey a genius 🤫💡","Combo x5! Lock in and keep going 🔒⚡"],"10":["10 IN A ROW. Unstoppable 🚀","Ten straight! Somebody call the exam board 📞","10 streak!! Legendary status 👑🌟","Double digits! Are you even human? 🤖💯","Ten straight. Write this in the history books 📜","x10 combo. The question bank is scared 😱🚀"]}};
 const JOKES=["I'm 100% sure about percentages... well, 99.9% 📊","Two trains leave a station. Both still have better time management than me 🚆","Why was the clock stressed? Too many hands on deck ⏰","Grammar tip: 'Your studying' vs 'You're studying' — only one is happening right now 📝","Profit and loss: I invested 2 hours and gained 1 nap 😴📉","Ratios are like friendships — keep them balanced ⚖️","Why did the average feel left out? It was always in the middle 📏","A pipe fills a tank in 3 hours. My motivation fills in 3 minutes 🚰","Synonym for 'study'? Future-flexing 💪📚","Simple interest is simple. Compound interest is my mood on exam week 📈","The angle between clock hands at 3:00? Right on time 🕒","Why don't odd numbers argue? They can't get even 🔢"];
 const BADGES={"first":{"n":"Hello World","i":"🌱","d":"Get your first answer right"},"speed":{"n":"Zoomies","i":"⚡","d":"Answer correctly in under 5 seconds"},"fire":{"n":"Heat Check","i":"🔥","d":"Reach a 5x combo"},"unstop":{"n":"No Brakes","i":"🚀","d":"Reach a 10x combo"},"clutch":{"n":"Buzzer Boss","i":"⏳","d":"Answer correctly in the last 3 seconds"},"perfect":{"n":"Flawless Era","i":"💎","d":"Get every question right in a run of 5+"},"comeback":{"n":"Glow Up","i":"🔁","d":"Fix a past mistake in Review mode"},"daily":{"n":"Daily Dose","i":"📅","d":"Complete a daily challenge"},"streak3":{"n":"Hat Trick Habit","i":"🗓️","d":"Keep a 3-day streak"},"level5":{"n":"High Five","i":"🖐️","d":"Reach level 5"}};
+const FUN2={"levelUp":["Promoted to the next level. HR is impressed 📈","Level up! Your desk just got a window view 🪟✨","Harder questions unlocked. You asked for this 😤🔓","Difficulty raised. The algorithm respects you now 🤝","New level, new title, same iconic brain 🧠👔","Climbing the ladder faster than the lift 🪜🚀"],"levelDown":["Strategic reset. Even pros warm up first 🔄🌱","Stepping down a level to build a stronger base 🧱","Tactical retreat. Regroup, refuel, return 🗺️💪","Easing off a notch. Momentum loading... ⏳","Back to basics. That's how legends train 🏋️","Small step back, big leap coming soon 🐸✨"],"mock":{"top":["Mock test? More like mock-ery of the paper 👑📊","Top tier score. Recruiters are refreshing inboxes 📬🔥","85+? The offer letter is warming up 📝✨","Elite performance. Frame this one 🖼️🏆"],"good":["Solid score! Shortlist energy confirmed ✅📋","Strong showing. A bit more polish and it's gold 🥈✨","Good run! The interview panel is curious 👀","You're in the zone. Keep the streak alive 🎯"],"mid":["Halfway hero. The glow-up is in progress 🌗","Decent base! Now we sharpen the edges ✏️💪","Middle of the pack, top of the effort chart 📈","Not bad! Review the misses and level up 🔍"],"low":["Every topper had a day like this. Onward 🌅","Low score, high potential. Data unlocked 📊🌱","This mock was practice. The real one is yours 💪","Rough round, but you showed up. That counts 🙌"]},"sjtGood":["Your future manager just added you to key meetings 📅","Textbook teamwork. HR is taking notes 📝✨","Diplomacy level: seasoned team lead 🤝👔","That's the answer of a future department head 🏢","Calm, fair, sensible. Promotion pending 📈","Stakeholders love you. Rare achievement 🏅"],"sjtBad":["Bold move. HR would like a word ☕","Interesting choice. The team chat went silent 😶","Not quite. Let's book a quick feedback session 🗓️","That email would need a polite follow-up 📧😅","Close, but the manager raised one eyebrow 🤨","Learning moment! Workplace wisdom loading 🔄💼"]};
+JOKES.push(...["My calendar has more meetings than my brain has RAM 🗓️💾","Synergy is just teamwork that went to business school 🎓","I don't procrastinate. I schedule future productivity 📆","The printer senses fear. And deadlines 🖨️😬","Let's circle back is office for 'never again' 🔁","I aced the logic test. Still can't find the stapler 📎","Per my last email: I studied. Mostly ✉️📚","The coffee machine is the real team leader ☕👑"]);
 const BOXW={1:16,2:8,3:4,4:2,5:1}; // Leitner: lower boxes are picked more often
 
 const $=s=>document.querySelector(s);
@@ -110,7 +145,7 @@ const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayKey(d)};
 function seeded(str){let h=2166136261;for(const c of str)h=Math.imul(h^c.charCodeAt(0),16777619);
   return()=>{h=h+0x6D2B79F5|0;let t=Math.imul(h^h>>>15,1|h);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true});
+const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true,adapt:{}});
 function load(){try{return Object.assign(DEF(),JSON.parse(localStorage.getItem("aq"))||{})}catch(e){return DEF()}}
 function save(){try{localStorage.setItem("aq",JSON.stringify(P))}catch(e){}}
 let P=load(),G=null,topic="All",tick;
@@ -154,55 +189,203 @@ const buzz=p=>{try{if(navigator.userActivation&&!navigator.userActivation.hasBee
 function award(k){if(!P.badges.includes(k)){P.badges.push(k);G.new.push(k)}}
 function bumpStreak(){const t=dayKey();if(P.streak.last===t)return;P.streak.n=P.streak.last===yesterday()?P.streak.n+1:1;P.streak.last=t}
 const curStreak=()=>P.streak.last===dayKey()||P.streak.last===yesterday()?P.streak.n:0;
+// Leitner key: bank questions by id; generated Quant items by template (review brings fresh numbers).
+const lkey=q=>q.lkey||q.id;
+function fromKey(k){return k.startsWith("gen:")?(GEN?GEN.generate(k.slice(4)):null):BANK.find(q=>q.id===k)||null}
+const dueKeys=()=>Object.keys(P.box).filter(k=>k.startsWith("gen:")?!!GEN:BANK.some(q=>q.id===k));
 function rec(q,ok,secs){const s=P.stats[q.topic]||(P.stats[q.topic]={n:0,r:0,t:0});s.n++;if(ok)s.r++;s.t+=secs;
-  const b=P.box[q.id];if(!ok)P.box[q.id]=1;else if(b){if(b>=5)delete P.box[q.id];else P.box[q.id]=b+1}}
+  const k=lkey(q),b=P.box[k];if(!ok)P.box[k]=1;else if(b){if(b>=5)delete P.box[k];else P.box[k]=b+1}}
 function weakest(){let w=null;TOPICS.forEach(t=>{const s=P.stats[t];if(!s||s.n<3||!BANK.some(q=>q.topic===t))return;
   const acc=s.r/s.n,avg=s.t/s.n;if(!w||acc<w.acc||(acc===w.acc&&avg>w.avg))w={t,acc,avg}});return w}
-function reviewPick(n){const pool=BANK.filter(q=>P.box[q.id]).map(q=>({q,w:BOXW[P.box[q.id]]||1})),out=[];
+function reviewPick(n){const pool=dueKeys().map(k=>({k,w:BOXW[P.box[k]]||1})),out=[];
   while(out.length<n&&pool.length){let r=Math.random()*pool.reduce((s,p)=>s+p.w,0),i=0;
-    while(i<pool.length-1&&(r-=pool[i].w)>0)i++;out.push(pool[i].q);pool.splice(i,1)}return out}
-const table=d=>`<div class="tbl"><table><thead><tr>${d.headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${d.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    while(i<pool.length-1&&(r-=pool[i].w)>0)i++;const q=fromKey(pool[i].k);if(q)out.push(q);pool.splice(i,1)}return out}
+const table=d=>`<div class="tbl"><table><thead><tr>${d.headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${d.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const hintTables=()=>document.querySelectorAll(".tbl").forEach(t=>{if(t.scrollWidth>t.clientWidth+2&&!(t.nextElementSibling&&t.nextElementSibling.classList.contains("hint")))t.insertAdjacentHTML("afterend",'<div class="hint">↔ Swipe the table to see every column</div>')});
+// Reasons for every option (correct ✓, the one you picked ✗).
+const optionReasons=(q,k)=>`<ul class="whys">${q.o.map((o,j)=>`<li class="${j===q.a?"w-ok":j===k?"w-bad":""}"><b>${j===q.a?"✓ ":j===k?"✗ ":""}${esc(o)}</b>${q.why?`<br><span>${esc(q.why[j])}</span>`:""}</li>`).join("")}</ul>`;
 function statsTable(){return table({headers:["Topic","Accuracy","Avg time","Answered"],rows:TOPICS.map(t=>{const s=P.stats[t];
-  return s?[t,Math.round(s.r/s.n*100)+"%",(s.t/s.n).toFixed(1)+"s",s.n]:[t,"–","–",0]})})}
+  return s?[TOPIC_NAME[t],Math.round(s.r/s.n*100)+"%",(s.t/s.n).toFixed(1)+"s",s.n]:[TOPIC_NAME[t],"–","–",0]})})}
 function toggleTheme(){P.theme=P.theme==="light"?"dark":"light";applyTheme();save();home()}
 function toggleSound(){P.sound=!P.sound;save();
   if(P.sound){unlockAudio();SFX.click()}else{try{AC&&AC.suspend().catch(()=>{})}catch(e){}}
   document.querySelectorAll("[data-sound]").forEach(b=>{b.textContent=P.sound?"🔊":"🔇";b.setAttribute("aria-pressed",String(!P.sound))})}
 const soundBtn=()=>`<button class="icon" data-sound onclick="toggleSound()" aria-label="Mute sound" aria-pressed="${!P.sound}">${P.sound?"🔊":"🔇"}</button>`;
 
-// ---- Timer: computed from timestamps, paused while the page is hidden (screen lock, app switch) ----
-const LIMIT=20;
+// ---- Practice timer: per-question limit by topic and difficulty; timestamps; pauses while the page is hidden ----
+const BASE_LIMIT={Verbal:20,Logical:30,Quant:35,DI:50,SJT:50};
+const qLimit=q=>(BASE_LIMIT[q.topic]||30)+((q.difficulty||1)-1)*10;
 const elapsed=()=>(G.used+(G.paused?0:Date.now()-G.resumeAt))/1000;
 function startTick(){clearInterval(tick);tick=setInterval(()=>{
   if(!G||G.over||G.locked||G.paused)return;
-  const r=Math.max(0,LIMIT-elapsed()),s=Math.ceil(r),tt=$("#tt"),tb=$("#tb");
-  if(tt)tt.textContent=s;if(tb)tb.style.width=(r/LIMIT*100)+"%";
+  const r=Math.max(0,G.limit-elapsed()),s=Math.ceil(r),tt=$("#tt"),tb=$("#tb");
+  if(tt)tt.textContent=s;if(tb)tb.style.width=(r/G.limit*100)+"%";
   if(s!==G.lastS){G.lastS=s;if(s>0&&s<=3)SFX.tick()}
   if(r<=0)answer(-1)},200)}
 
-// ---- Mock test: saved after every answer so a call or app switch never loses the run ----
-const RUNKEY="aq-run";
-function saveRun(){if(!G||G.mode!=="mock"||G.over)return;try{localStorage.setItem(RUNKEY,JSON.stringify({ids:G.qs.map(q=>q.id),i:G.i,answered:!!G.locked,combo:G.combo,max:G.max,xp:G.xp,right:G.right,new:G.new,tr:G.tr,saved:Date.now()}))}catch(e){}}
-function loadRun(){try{const r=JSON.parse(localStorage.getItem(RUNKEY));if(!r||!Array.isArray(r.ids))return null;
-  const qs=r.ids.map(id=>BANK.find(q=>q.id===id));return qs.every(Boolean)?Object.assign(r,{qs}):null}catch(e){return null}}
+// ---- Adaptive difficulty (1-3): up after 3 correct in a row, down after 2 wrong in a row. Saved per topic. ----
+function pickAdaptive(){
+  const lv=G.level,tps=G.topicSel==="All"?TOPICS.filter(t=>BANK.some(q=>q.topic===t)||(t==="Quant"&&GEN)):[G.topicSel],t=pick(tps);
+  const bankAt=d=>BANK.filter(q=>q.topic===t&&q.difficulty===d&&!G.seen.has(q.id));
+  if(t==="Quant"&&GEN&&(Math.random()<.5||!bankAt(lv).length)){
+    const ids=GEN.byDifficulty(lv).length?GEN.byDifficulty(lv):GEN.byDifficulty(2),q=GEN.generate(pick(ids));if(q)return q}
+  for(const d of [lv,lv+1,lv-1,lv+2,lv-2]){const c=bankAt(d);if(c.length)return pick(c)}
+  const any=BANK.filter(q=>q.topic===t);return any.length?pick(any):(GEN?GEN.generate():null)}
+function adaptStep(ok){if(!G.adaptive)return 0;let ch=0;
+  if(ok){G.up++;G.down=0;if(G.up>=3&&G.level<3){G.level++;G.up=0;ch=1}}
+  else{G.down++;G.up=0;if(G.down>=2&&G.level>1){G.level--;G.down=0;ch=-1}}
+  P.adapt[G.key]=G.level;return ch}
+
+// ---- Mock Test: 20 mixed questions, one total timer, no hints or feedback until submitted.
+// Saved after every action, so a call or app switch never loses the run. ----
+const RUNKEY="aq-run",MOCK_N=20,MOCK_MS=20*60*1000;let M=null;
+const mockElapsed=()=>M.used+(M.paused?0:Date.now()-M.resumeAt);
+const mmss=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+function mockPickQs(){
+  const tps=TOPICS.filter(t=>BANK.some(q=>q.topic===t&&!q.custom)||(t==="Quant"&&GEN)),per=Math.max(1,Math.floor(MOCK_N/tps.length)),diffs=[2,1,3,2,1,3],qs=[];
+  tps.forEach(t=>{const pool=shuffle(BANK.filter(q=>q.topic===t&&!q.custom)),take=[];
+    for(let i=0;i<per;i++){const d=diffs[i%diffs.length];
+      if(t==="Quant"&&GEN&&(i%2===1||!pool.length)){const ids=GEN.byDifficulty(d).length?GEN.byDifficulty(d):GEN.byDifficulty(2),g=GEN.generate(pick(ids));if(g){take.push(g);continue}}
+      const c=pool.find(q=>q.difficulty===d&&!take.includes(q))||pool.find(q=>!take.includes(q));if(c)take.push(c)}
+    qs.push(...take)});
+  const rest=shuffle(BANK.filter(q=>!q.custom&&!qs.includes(q)));while(qs.length<MOCK_N&&rest.length)qs.push(rest.pop());
+  return shuffle(qs).slice(0,MOCK_N)}
+function startMock(){const qs=mockPickQs();if(!qs.length)return home("No questions available yet.");
+  clearInterval(tick);if(G)G.over=true;G=null;SFX.click();
+  M={qs,ans:qs.map(()=>null),spent:qs.map(()=>0),i:0,used:0,resumeAt:Date.now(),qStart:Date.now(),paused:false,over:false};
+  saveRun();mockRender()}
+function saveRun(){if(!M||M.over)return;try{localStorage.setItem(RUNKEY,JSON.stringify({v:2,qs:M.qs,ans:M.ans,spent:M.spent,i:M.i,used:mockElapsed(),saved:Date.now()}))}catch(e){}}
+function loadRun(){try{const r=JSON.parse(localStorage.getItem(RUNKEY));return r&&r.v===2&&Array.isArray(r.qs)&&r.qs.length&&Array.isArray(r.ans)?r:null}catch(e){return null}}
 function clearRun(){try{localStorage.removeItem(RUNKEY)}catch(e){}}
 function discardRun(){clearRun();home()}
 function resumeRun(){const r=loadRun();if(!r){clearRun();return home("That saved test couldn't be loaded, sorry.")}
-  G={mode:"mock",label:"📝 Mock",qs:r.qs,i:r.i+(r.answered?1:0),lives:3,combo:r.combo||0,max:r.max||0,xp:r.xp||0,right:r.right||0,new:r.new||[],tr:r.tr||{}};
-  if(G.i>=G.qs.length)end();else ask()}
-function quit(){if(G&&G.mode!=="mock"&&!confirm("Quit this run? Its progress will be lost."))return;
-  home(G&&G.mode==="mock"?"📝 Test saved. Resume it any time.":"")}
+  clearInterval(tick);if(G)G.over=true;G=null;
+  M={qs:r.qs,ans:r.ans,spent:r.spent||r.qs.map(()=>0),i:Math.min(r.i||0,r.qs.length-1),used:r.used||0,resumeAt:Date.now(),qStart:Date.now(),paused:false,over:false};
+  if(mockElapsed()>=MOCK_MS)mockSubmit(true);else mockRender()}
+function mockLeave(){if(M&&!M.over&&!M.paused){M.spent[M.i]+=Date.now()-M.qStart;M.qStart=Date.now()}}
+function quit(){
+  if(M&&!M.over){mockLeave();saveRun();clearInterval(tick);M=null;return home("📝 Test saved. Resume it any time.")}
+  if(G&&!G.over&&!confirm("Quit this run? Its progress will be lost."))return;home()}
+const answeredTxt=()=>`${M.ans.filter(a=>a!==null).length}/${M.qs.length} answered · results and explanations after you submit`;
+function mockRender(){
+  const i=M.i,q=M.qs[i],n=M.qs.length,left=MOCK_MS-mockElapsed();
+  $("#app").innerHTML=`<div class="screen">
+  <div class="qhead"><button class="icon" onclick="quit()" aria-label="Save and exit">✕</button>
+    <span class="grow">📝 Mock test · Q ${i+1}/${n} · ${TOPIC_NAME[q.topic]||esc(q.topic)}</span><b class="clock${left<=60000?" warn":""}" id="mt" role="timer" aria-label="Time left">${mmss(left)}</b></div>
+  <div class="bar"><div id="mtb" style="width:${Math.max(0,left/MOCK_MS*100)}%"></div></div>
+  <div class="note" id="pause" hidden>⏸ The timer paused while you were away.</div>
+  <h2>${esc(q.q)}</h2>
+  ${q.data?table(q.data):""}
+  <div class="opts">${q.o.map((o,k)=>`<button class="opt${M.ans[i]===k?" sel":""}" aria-pressed="${M.ans[i]===k}" onclick="mockSelect(${k})"><kbd>${k+1}</kbd><span>${esc(o)}</span></button>`).join("")}</div>
+  <div class="pal" id="pal" aria-label="Question navigator">${M.qs.map((_,j)=>`<button class="pb${M.ans[j]!==null?" done":""}${j===i?" cur":""}" onclick="mockGo(${j})" aria-label="Question ${j+1}${M.ans[j]!==null?", answered":""}">${j+1}</button>`).join("")}</div>
+  <div class="row"><small id="ansd">${answeredTxt()}</small><button class="chip" onclick="mockSubmit()">Submit test</button></div></div>
+  <div class="dock"><div class="btns2"><button class="alt" onclick="mockGo(${i-1})" ${i===0?"disabled":""}>◀ Prev</button>
+    <button class="main" onclick="${i===n-1?"mockSubmit()":`mockGo(${i+1})`}">${i===n-1?"Submit test":"Next ▶"} <small class="kb">(Enter)</small></button></div></div>`;
+  hintTables();scrollTo(0,0);
+  const pal=$("#pal"),cur=pal&&pal.querySelector(".cur");if(cur)pal.scrollLeft=cur.offsetLeft-pal.clientWidth/2+cur.clientWidth/2;
+  clearInterval(tick);tick=setInterval(()=>{if(!M||M.over||M.paused)return;const l=MOCK_MS-mockElapsed(),c=$("#mt"),b=$("#mtb");
+    if(c){c.textContent=mmss(l);c.classList.toggle("warn",l<=60000)}if(b)b.style.width=Math.max(0,l/MOCK_MS*100)+"%";if(l<=0)mockSubmit(true)},500)}
+function mockSelect(k){if(!M||M.over)return;M.ans[M.i]=k;
+  document.querySelectorAll(".opt").forEach((b,j)=>{b.classList.toggle("sel",j===k);b.setAttribute("aria-pressed",String(j===k))});
+  const pb=document.querySelectorAll(".pb")[M.i];if(pb)pb.classList.add("done");const s=$("#ansd");if(s)s.textContent=answeredTxt();saveRun()}
+function mockGo(j){if(!M||M.over||j<0||j>=M.qs.length)return;mockLeave();M.i=j;saveRun();mockRender()}
+function mockSubmit(auto){if(!M||M.over)return;const un=M.ans.filter(a=>a===null).length;
+  if(!auto&&!confirm(un?`${un} question${un>1?"s are":" is"} unanswered. Submit anyway?`:"Submit your test now?"))return;
+  mockLeave();clearInterval(tick);M.usedFinal=Math.min(MOCK_MS,mockElapsed());M.over=true;M.timedOut=!!auto;clearRun();
+  G={mode:"mock",new:[],over:true};let right=0;const tr={};
+  M.qs.forEach((q,j)=>{const ok=M.ans[j]===q.a;if(ok)right++;rec(q,ok,M.spent[j]/1000);
+    const t=tr[q.topic]||(tr[q.topic]={n:0,r:0,ms:0});t.n++;if(ok)t.r++;t.ms+=M.spent[j]});
+  M.right=right;M.tr=tr;if(right===M.qs.length)award("perfect");
+  const xp=right*10;bumpStreak();if(P.streak.n>=3)award("streak3");
+  const before=lvl(P.xp);P.xp+=xp;P.best=Math.max(P.best,xp);const up=lvl(P.xp)>before;if(lvl(P.xp)>=5)award("level5");save();
+  mockResults(up,xp)}
+function mockResults(up,xp){
+  const n=M.qs.length,pct=Math.round(M.right/n*100),band=pct>=85?"top":pct>=65?"good":pct>=45?"mid":"low",tps=TOPICS.filter(t=>M.tr[t]);
+  const worst=tps.slice().sort((a,b)=>M.tr[a].r/M.tr[a].n-M.tr[b].r/M.tr[b].n)[0];
+  $("#app").innerHTML=`<div class="screen">
+  <h1>📝 Mock test results</h1>
+  ${up?`<div class="lvlup">⬆️ Level up! You're now level ${lvl(P.xp)}</div>`:""}
+  <div class="score"><div class="big">${M.right}/${n}</div><div>${pct}% · time used ${mmss(M.usedFinal)} of ${mmss(MOCK_MS)}${M.timedOut?" (time ran out)":""} · +${xp} XP</div></div>
+  <div class="meme ${pct>=65?"good":"bad"}" role="status"><span class="face ${pct>=85?"cool":pct>=65?"happy":pct>=45?"wow":"sad"}"></span><span>${pick(FUN2.mock[band])}</span></div>
+  <h3>By topic</h3>${table({headers:["Topic","Score","Accuracy","Avg time"],rows:tps.map(t=>{const r=M.tr[t];return[TOPIC_NAME[t],`${r.r}/${r.n}`,Math.round(r.r/r.n*100)+"%",Math.round(r.ms/r.n/1000)+"s"]})})}
+  ${worst&&M.tr[worst].r<M.tr[worst].n?`<div class="weak"><div><b>🎯 Focus next: ${TOPIC_NAME[worst]}</b><br><small>Your lowest score in this test</small></div><button class="alt" onclick="topic='${worst}';start()">Practise ${worst}</button></div>`:""}
+  ${G.new.length?`<p>New badges: ${G.new.map(k=>BADGES[k].i+" "+BADGES[k].n).join(", ")}</p>`:""}
+  <h3>Full review</h3>
+  <div class="chips"><button class="chip on" id="rvAll" onclick="rvFilter(false)">All ${n}</button><button class="chip" id="rvBad" onclick="rvFilter(true)">Mistakes &amp; skipped (${n-M.right})</button></div>
+  <div id="rv">${M.qs.map((q,j)=>reviewItem(q,j)).join("")}</div>
+  <p class="joke">😂 ${pick(JOKES)}</p></div>
+  <div class="dock"><div class="btns2"><button class="alt" onclick="home()">Home</button><button class="main" onclick="startMock()">New mock test</button></div></div>`;
+  scrollTo(0,0);if(up){confetti();SFX.level()}else SFX.badge()}
+function reviewItem(q,j){const a=M.ans[j],st=a===null?"skip":a===q.a?"ok":"bad";
+  return`<details class="rv ${st}"><summary><span aria-hidden="true">${st==="ok"?"✅":st==="bad"?"❌":"⏭️"}</span><span class="grow">Q${j+1} · ${TOPIC_NAME[q.topic]||esc(q.topic)} · ${esc(q.q.length>64?q.q.slice(0,64)+"…":q.q)}</span></summary>
+  <p>${esc(q.q)}</p>${q.data?table(q.data):""}${optionReasons(q,a)}
+  <p class="exp">💡 ${esc(q.e)}</p>${q.tip?`<div class="tip">⚡ Shortcut: ${esc(q.tip)}</div>`:""}
+  <p class="small">${a===null?"Not answered":a===q.a?"You answered correctly":"Your answer: "+esc(q.o[a])} · ${Math.round(M.spent[j]/1000)}s on this question</p></details>`}
+function rvFilter(bad){$("#rv").classList.toggle("only-bad",bad);$("#rvAll").classList.toggle("on",!bad);$("#rvBad").classList.toggle("on",bad)}
+
+// ---- Import: paste a JSON array of questions; schema-validated, saved in localStorage on this device ----
+const IMPORT_EXAMPLE=[{id:"my-001",topic:"Quant",difficulty:2,q:"A price rises from $80 to $100. What is the percentage increase?",o:["20%","25%","80%","125%"],a:1,
+  e:"(100 − 80) / 80 × 100 = 25%.",tip:"Divide the change by the original value.",
+  why:["Divides the change by the new price (wrong base).","Correct: 20 / 80 = 25%.","Old price as a percentage of the new.","New price as a percentage of the old."]}];
+const normT=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+const qSig=q=>normT(q.q)+"|"+JSON.stringify(q.data||"");
+function validateQ(q,ids,sigs){const E=[],str=(v,min,max)=>typeof v==="string"&&v.trim().length>=min&&v.length<=max;
+  if(!q||typeof q!=="object"||Array.isArray(q))return["not an object"];
+  if(!str(q.id,1,40)||!/^[A-Za-z0-9_-]+$/.test(q.id))E.push("id must be 1–40 letters, digits, - or _");else if(ids.has(q.id))E.push(`id "${q.id}" already exists`);
+  if(!TOPICS.includes(q.topic))E.push("topic must be one of "+TOPICS.join(", "));
+  if(![1,2,3].includes(q.difficulty))E.push("difficulty must be 1, 2 or 3");
+  if(!str(q.q,8,1200))E.push("q (question) must be 8–1200 characters");else if(sigs.has(qSig(q)))E.push("duplicate of an existing question");
+  if(!Array.isArray(q.o)||q.o.length!==4||q.o.some(o=>!str(o,1,300)))E.push("o must be exactly 4 non-empty options");else if(new Set(q.o.map(normT)).size!==4)E.push("the 4 options must all be different");
+  if(!Number.isInteger(q.a)||q.a<0||q.a>3)E.push("a must be 0, 1, 2 or 3 (index of the correct option)");
+  if(!str(q.e,3,1500))E.push("e (explanation) is required");
+  if(q.tip!==undefined&&!str(q.tip,1,400))E.push("tip must be text");
+  if(q.why!==undefined&&(!Array.isArray(q.why)||q.why.length!==4||q.why.some(w=>!str(w,1,400))))E.push("why must be 4 reasons, one per option");
+  if(q.topic==="DI"||q.data!==undefined){const d=q.data;
+    if(!d||!Array.isArray(d.headers)||!d.headers.length||d.headers.length>8||!Array.isArray(d.rows)||!d.rows.length||d.rows.length>30)E.push("DI needs data with 1–8 headers and 1–30 rows");
+    else if(d.rows.some(r=>!Array.isArray(r)||r.length!==d.headers.length||r.some(c=>!(typeof c==="string"||typeof c==="number"))))E.push("each data row needs one text/number cell per header")}
+  return E}
+function importScreen(){clearInterval(tick);if(G)G.over=true;if(M&&!M.over){mockLeave();saveRun()}M=null;
+  $("#app").innerHTML=`<div class="screen">
+  <div class="qhead"><button class="icon" onclick="home()" aria-label="Back to home">✕</button><span class="grow"><b>Import questions</b></span></div>
+  <p class="sub">Paste a JSON array of questions. Each one is checked against the schema and saved on this device only.</p>
+  <textarea id="imp" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Questions as JSON" placeholder='[{"id":"my-001","topic":"Quant","difficulty":2,"q":"...","o":["A","B","C","D"],"a":1,"e":"..."}]'></textarea>
+  <div class="grid2"><button class="alt" onclick="impExample()">Insert example</button><button class="alt" id="impRm" onclick="impClear()" ${CUSTOM.length?"":"disabled"}>Remove imported (${CUSTOM.length})</button></div>
+  <div id="impres" role="status"></div>
+  <details class="more"><summary>Format</summary><ul class="whys">
+    <li><b>id</b>: unique text, e.g. "my-001"</li><li><b>topic</b>: ${TOPICS.join(", ")}</li><li><b>difficulty</b>: 1, 2 or 3</li>
+    <li><b>q</b>: question text</li><li><b>o</b>: exactly 4 different options</li><li><b>a</b>: index of the correct option (0–3)</li>
+    <li><b>e</b>: explanation</li><li><b>tip</b> (optional): one-line shortcut</li><li><b>why</b> (optional): 4 reasons, one per option</li>
+    <li><b>data</b> (required for DI): {"headers":[...], "rows":[[...], ...]}</li></ul></details></div>
+  <div class="dock"><button class="main" onclick="doImport()">Validate &amp; import</button></div>`;scrollTo(0,0)}
+function impExample(){$("#imp").value=JSON.stringify(IMPORT_EXAMPLE,null,1)}
+function doImport(){const out=$("#impres"),raw=$("#imp").value.trim();
+  if(!raw){out.innerHTML=`<div class="note">Paste a JSON array first.</div>`;return}
+  let arr;try{arr=JSON.parse(raw)}catch(e){out.innerHTML=`<div class="note warnb">That isn't valid JSON: ${esc(e.message)}</div>`;return}
+  if(!Array.isArray(arr))arr=[arr];
+  if(arr.length>500){out.innerHTML=`<div class="note warnb">Please import at most 500 questions at a time.</div>`;return}
+  const ids=new Set(BANK.map(q=>q.id)),sigs=new Set(BANK.map(qSig)),ok=[],bad=[];
+  arr.forEach((q,i)=>{const e=validateQ(q,ids,sigs);
+    if(e.length){bad.push(`#${i+1}${q&&typeof q.id==="string"?" ("+q.id+")":""}: ${e.join("; ")}`);return}
+    const c={id:q.id,topic:q.topic,difficulty:q.difficulty,q:q.q.trim(),o:q.o.map(s=>s.trim()),a:q.a,e:q.e.trim()};
+    if(q.tip)c.tip=q.tip.trim();if(q.why)c.why=q.why.map(s=>s.trim());if(q.data)c.data={headers:q.data.headers.map(String),rows:q.data.rows.map(r=>r.slice())};
+    ok.push(c);ids.add(c.id);sigs.add(qSig(c))});
+  if(ok.length){const nx=CUSTOM.concat(ok);
+    try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(nx))}catch(e){out.innerHTML=`<div class="note warnb">Couldn't save on this device (storage is full or blocked). Nothing was imported.</div>`;return}
+    CUSTOM=nx;BANK=BANK.concat(ok.map(q=>Object.assign({},q,{custom:true})))}
+  out.innerHTML=`<div class="note${bad.length&&!ok.length?" warnb":""}">${ok.length?`✅ Imported ${ok.length} question${ok.length>1?"s":""}. They now appear in practice and review.`:"Nothing was imported."}${bad.length?`<br><b>Skipped ${bad.length}:</b><ul class="errs">${bad.slice(0,15).map(b=>`<li>${esc(b)}</li>`).join("")}</ul>${bad.length>15?`…and ${bad.length-15} more`:""}`:""}</div>`;
+  const rm=$("#impRm");if(rm){rm.disabled=!CUSTOM.length;rm.textContent=`Remove imported (${CUSTOM.length})`}}
+function impClear(){if(!confirm(`Remove all ${CUSTOM.length} imported questions from this device?`))return;
+  try{localStorage.removeItem(CUSTOM_KEY)}catch(e){}CUSTOM=[];BANK=BANK.filter(q=>!q.custom);importScreen()}
 
 function home(msg){
-  clearInterval(tick);if(G)G.over=true;
-  const w=weakest(),due=BANK.filter(q=>P.box[q.id]).length,dd=P.daily.date===dayKey(),run=loadRun();
+  clearInterval(tick);if(G)G.over=true;if(M&&!M.over){mockLeave();saveRun()}M=null;
+  const w=weakest(),due=dueKeys().length,dd=P.daily.date===dayKey(),run=loadRun(),al=P.adapt[topic]||1;
   $("#app").innerHTML=`<div class="screen">
   <div class="top"><h1>🧠 Aptitude Quest</h1><div class="tools">${soundBtn()}
     <button class="icon" onclick="toggleTheme()" aria-label="Switch dark/light theme">${P.theme==="light"?"🌙":"☀️"}</button></div></div>
-  <p class="sub">Study hard. Meme harder.</p>
-  <p class="joke">😂 ${JOKES[Math.floor(seeded("joke-"+dayKey())()*JOKES.length)]}</p>
+  <p class="sub">Management trainee aptitude practice. Study hard, meme harder.</p>
   ${msg?`<div class="note">${msg}</div>`:""}
-  ${run?`<div class="weak" id="resume"><div><b>📝 Mock test in progress</b><br><small>${Math.min(run.i+(run.answered?1:0),run.ids.length)} of ${run.ids.length} answered · ${run.right} correct</small></div>
+  ${run?`<div class="weak" id="resume"><div><b>📝 Mock test in progress</b><br><small>${run.ans.filter(a=>a!==null).length} of ${run.qs.length} answered · ${mmss(MOCK_MS-run.used)} left</small></div>
     <div class="btns"><button class="alt" onclick="resumeRun()">Resume ▶</button><button class="chip" onclick="discardRun()">Discard</button></div></div>`:""}
   <div class="row"><b>Level ${lvl(P.xp)}</b><span>${P.xp} XP</span></div>
   <div class="bar"><div style="width:${P.xp%100}%"></div></div>
@@ -210,13 +393,14 @@ function home(msg){
     <div class="card"><div class="big">🔥 ${curStreak()}</div><small>day streak</small></div>
     <div class="card"><div class="big">🏆 ${P.best}</div><small>best run XP</small></div>
     <div class="card"><div class="big">📚 ${due}</div><small>to review</small></div></div>
-  <h3>Practice</h3>
+  <h3>Practice <small class="small">· adaptive, now at level ${al}/3 for ${topic==="All"?"mixed topics":TOPIC_NAME[topic]}</small></h3>
   <div class="chips">${["All",...TOPICS].map(t=>`<button class="chip ${t===topic?"on":""}" aria-pressed="${t===topic}" onclick="topic='${t}';home()">${t}</button>`).join("")}</div>
   <div class="grid2">
     <button class="alt" onclick="start('daily')">📅 Daily${dd?` ✓ ${P.daily.score}/${P.daily.n}`:" challenge"}</button>
     <button class="alt" onclick="start('review')">🔁 Review (${due})</button>
-    <button class="alt wide" onclick="start('mock')">📝 ${run?"New mock test (replaces saved)":"Mock test · 20 questions, no lives"}</button></div>
-  ${w?`<div class="weak"><div><b>🎯 Weakest topic: ${w.t}</b><br><small>${Math.round(w.acc*100)}% accuracy · ${w.avg.toFixed(1)}s avg</small></div>
+    <button class="alt wide" onclick="startMock()">📝 ${run?"New mock test (replaces saved)":"Mock test · 20 questions · 20 min · no hints"}</button>
+    <button class="alt wide" onclick="importScreen()">📥 Import questions${CUSTOM.length?` (${CUSTOM.length} added)`:""}</button></div>
+  ${w?`<div class="weak"><div><b>🎯 Weakest topic: ${TOPIC_NAME[w.t]}</b><br><small>${Math.round(w.acc*100)}% accuracy · ${w.avg.toFixed(1)}s avg</small></div>
     <button class="alt" onclick="start('weak')">Practice weakest topic</button></div>`
     :`<div class="weak"><small>🎯 Answer 3+ questions in a topic to unlock your weakest-topic card.</small></div>`}
   <h3>Stats</h3>${statsTable()}
@@ -226,64 +410,69 @@ function home(msg){
 }
 
 function start(mode="quest"){
-  let qs,label;
-  if(mode==="daily"){qs=shuffle(BANK,seeded("aq-daily-"+dayKey())).slice(0,10);label="📅 Daily"}
+  if(mode==="mock")return startMock();
+  let qs=[],label,adaptive=false,topicSel="All";
+  if(mode==="daily"){qs=shuffle(window.QUESTIONS||[],seeded("aq-daily-"+dayKey())).slice(0,10);label="📅 Daily"}
   else if(mode==="review"){qs=reviewPick(10);label="🔁 Review";if(!qs.length)return home("No mistakes to review yet. Go make some! 😄")}
-  else if(mode==="weak"){const w=weakest();if(!w)return home();qs=shuffle(BANK.filter(q=>q.topic===w.t)).slice(0,10);label="🎯 "+w.t}
-  else if(mode==="mock"){qs=shuffle(TOPICS.flatMap(t=>shuffle(BANK.filter(q=>q.topic===t)).slice(0,5)));label="📝 Mock"}
-  else{qs=shuffle(BANK.filter(q=>topic==="All"||q.topic===topic)).slice(0,10);label="⚔️ "+topic}
-  if(!qs.length)return home("No questions found for this topic yet.");
-  SFX.click();
-  G={mode,label,qs,i:0,lives:3,combo:0,max:0,xp:0,right:0,new:[],tr:{}};
+  else{if(mode==="weak"){const w=weakest();if(!w)return home();topicSel=w.t;label="🎯 "+w.t}else{topicSel=topic;label="⚔️ "+topic}
+    if(!BANK.some(q=>topicSel==="All"||q.topic===topicSel)&&!(GEN&&/^(All|Quant)$/.test(topicSel)))return home("No questions found for this topic yet.");
+    adaptive=true}
+  if(!adaptive&&!qs.length)return home("No questions found yet.");
+  clearInterval(tick);M=null;SFX.click();
+  G={mode,label,qs,i:0,lives:3,combo:0,max:0,xp:0,right:0,new:[],total:adaptive?10:qs.length,
+     adaptive,key:topicSel,topicSel,level:adaptive?(P.adapt[topicSel]||1):0,up:0,down:0,seen:new Set()};
   ask();
 }
 
 function ask(){
-  const q=G.qs[G.i];Object.assign(G,{locked:false,used:0,resumeAt:Date.now(),paused:false,lastS:LIMIT});
-  const lives=G.mode==="mock"?"":` · <span aria-label="${G.lives} lives">${"❤️".repeat(G.lives)}${"🖤".repeat(3-G.lives)}</span>`;
+  if(G.adaptive&&!G.qs[G.i]){const nq=pickAdaptive();if(!nq)return end();G.qs.push(nq)}
+  const q=G.qs[G.i];G.seen.add(q.id);Object.assign(G,{locked:false,used:0,resumeAt:Date.now(),paused:false,limit:qLimit(q)});G.lastS=G.limit;
   $("#app").innerHTML=`<div class="screen">
   <div class="qhead"><button class="icon" onclick="quit()" aria-label="Quit to home">✕</button>
-    <span class="grow">${G.label} · Q ${G.i+1}/${G.qs.length} · ${q.topic} ${"★".repeat(q.difficulty||1)}</span>${soundBtn()}</div>
-  <div class="row"><span>⏱ <b id="tt">${LIMIT}</b>s</span><span>🔥 x${G.combo} · ⭐ ${G.xp}${lives}</span></div>
+    <span class="grow">${G.label} · Q ${G.i+1}/${G.total} · ${TOPIC_NAME[q.topic]||esc(q.topic)} ${"★".repeat(q.difficulty||1)}${q.custom?" · imported":""}</span>${soundBtn()}</div>
+  <div class="row"><span>⏱ <b id="tt">${G.limit}</b>s</span><span>${G.adaptive?`<span class="lvtag">Level ${G.level}/3</span> · `:""}🔥 x${G.combo} · ⭐ ${G.xp} · <span aria-label="${G.lives} lives">${"❤️".repeat(G.lives)}${"🖤".repeat(3-G.lives)}</span></span></div>
   <div class="bar"><div id="tb" style="width:100%"></div></div>
   <div class="note" id="pause" hidden>⏸ The timer paused while you were away.</div>
-  <h2>${q.q}</h2>
+  <h2>${esc(q.q)}</h2>
   ${q.data?table(q.data):""}
-  <div class="opts">${q.o.map((o,k)=>`<button class="opt" onclick="answer(${k})"><kbd>${k+1}</kbd><span>${o}</span></button>`).join("")}</div>
+  <div class="opts">${q.o.map((o,k)=>`<button class="opt" onclick="answer(${k})"><kbd>${k+1}</kbd><span>${esc(o)}</span></button>`).join("")}</div>
   <div id="fb"></div></div>
   <div class="dock"><button class="main" id="next" onclick="next()" disabled>Tap an answer</button></div>`;
-  document.querySelectorAll(".tbl").forEach(t=>{if(t.scrollWidth>t.clientWidth+2)t.insertAdjacentHTML("afterend",'<div class="hint">↔ Swipe the table to see every column</div>')});
-  scrollTo(0,0);saveRun();startTick();
+  hintTables();scrollTo(0,0);startTick();
 }
 
 function answer(k){
   if(!G||G.over||G.locked)return;G.locked=true;clearInterval(tick);
-  const q=G.qs[G.i],secs=Math.min(LIMIT,elapsed()),ok=k===q.a,near=k!==-1&&secs>=LIMIT-3;
-  const wasBoxed=!!P.box[q.id],nb=G.new.length;
+  const q=G.qs[G.i],secs=Math.min(G.limit,elapsed()),ok=k===q.a,near=k!==-1&&secs>=G.limit-3,sjt=q.topic==="SJT";
+  const wasBoxed=!!P.box[lkey(q)],nb=G.new.length;
   rec(q,ok,secs);
-  const tr=G.tr[q.topic]||(G.tr[q.topic]={n:0,r:0});tr.n++;if(ok)tr.r++;
   document.querySelectorAll(".opt").forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("good");else if(j===k)b.classList.add("bad")});
   let msg,face;
   if(ok){
     G.combo++;G.max=Math.max(G.max,G.combo);G.right++;
-    const gain=10+Math.max(0,10-Math.round(secs))+5*Math.min(G.combo-1,4);
+    const gain=10+Math.max(0,10-Math.round(secs/G.limit*20))+5*Math.min(G.combo-1,4)+5*((q.difficulty||1)-1);
     G.xp+=gain;
     award("first");if(G.combo>=5)award("fire");if(G.combo>=10)award("unstop");
     if(secs<5)award("speed");if(near)award("clutch");if(G.mode==="review"&&wasBoxed)award("comeback");
-    msg=pick(MEMES.streak[G.combo]||(near?MEMES.near.good:MEMES.good))+` <b>+${gain} XP</b>`;
+    msg=pick(MEMES.streak[G.combo]||(near?MEMES.near.good:sjt?FUN2.sjtGood:MEMES.good))+` <b>+${gain} XP</b>`;
     face=MEMES.streak[G.combo]?"cool":near?"wow":"happy";SFX.good();buzz(30);
   }else{
-    if(G.mode!=="mock")G.lives--;G.combo=0;
-    msg=pick(k===-1?MEMES.time:near?MEMES.near.bad:MEMES.bad);
+    G.lives--;G.combo=0;
+    msg=pick(k===-1?MEMES.time:near?MEMES.near.bad:sjt?FUN2.sjtBad:MEMES.bad);
     face=k===-1?"wow":"sad";SFX.bad();buzz([60,50,60]);
   }
-  save();saveRun();
+  const ch=adaptStep(ok);save();
   const fresh=G.new.slice(nb);if(fresh.length)setTimeout(SFX.badge,250);
-  const last=(G.mode!=="mock"&&G.lives<=0)||G.i===G.qs.length-1;
+  const last=G.lives<=0||G.i===G.total-1;
+  const reasons=sjt?`<h3>How each response rates</h3>${optionReasons(q,k)}`
+    :`${k>=0&&!ok&&q.why?`<div class="trap">🪤 Why “${esc(q.o[k])}” tempts: ${esc(q.why[k])}</div>`:""}
+      ${q.why?`<details class="more"><summary>Why each option is right or wrong</summary>${optionReasons(q,k)}</details>`:""}`;
   $("#fb").innerHTML=`<div class="meme ${ok?"good":"bad"}" role="status"><span class="face ${face}"></span><span>${msg}</span></div>
+  ${ch?`<div class="note lvchg">${ch>0?"📈 Difficulty up":"📉 Difficulty down"}: level ${G.level}/3 · ${pick(ch>0?FUN2.levelUp:FUN2.levelDown)}</div>`:""}
   ${fresh.map(b=>`<div class="note">🏅 New badge: ${BADGES[b].i} <b>${BADGES[b].n}</b> · ${BADGES[b].d}</div>`).join("")}
-  <p class="exp">💡 ${q.e}</p>
-  ${q.tip?`<div class="tip">⚡ Shortcut: ${q.tip}</div>`:""}`;
+  <p class="exp">💡 ${esc(q.e)}</p>
+  ${reasons}
+  ${q.tip?`<div class="tip">⚡ ${sjt?"Rule of thumb":"Shortcut"}: ${esc(q.tip)}</div>`:""}`;
   const nx=$("#next");nx.disabled=false;nx.innerHTML=`${last?"Finish 🏁":"Next ▶"} <small class="kb">(Enter)</small>`;
   $("#fb").scrollIntoView({block:"nearest",behavior:reduced()?"auto":"smooth"});
 }
@@ -291,12 +480,12 @@ function answer(k){
 function next(){
   if(!G||G.over||!G.locked)return;
   G.i++;
-  if(G.lives<=0||G.i>=G.qs.length)end();else ask();
+  if(G.lives<=0||G.i>=G.total)end();else ask();
 }
 
 function end(){
-  clearInterval(tick);G.over=true;if(G.mode==="mock")clearRun();
-  const n=G.qs.length,pct=Math.round(G.right/n*100),done=G.lives>0;
+  clearInterval(tick);G.over=true;
+  const n=G.total,pct=Math.round(G.right/n*100),done=G.lives>0;
   if(pct===100&&n>=5)award("perfect");
   if(G.mode==="daily"&&done){award("daily");const prev=P.daily.date===dayKey()?P.daily.score:0;P.daily={date:dayKey(),score:Math.max(prev,G.right),n}}
   bumpStreak();if(P.streak.n>=3)award("streak3");
@@ -305,12 +494,12 @@ function end(){
   save();
   const rank=pct>=90?"🧙 Aptitude Wizard":pct>=70?"😎 Big Brain":pct>=50?"🙂 Getting There":"🥔 Potato (with potential)";
   $("#app").innerHTML=`<div class="screen">
-  <h1>${G.mode==="mock"?"📝 Mock test complete":done?"🎉 Quest complete":"💀 Out of lives"}</h1>
+  <h1>${done?"🎉 Quest complete":"💀 Out of lives"}</h1>
   ${up?`<div class="lvlup">⬆️ Level up! You're now level ${lvl(P.xp)}</div>`:""}
   <h2>${rank}</h2>
-  <p>Score: ${G.right}/${n} (${pct}%)<br>XP earned: ${G.xp}<br>Best combo: ${G.max}x<br>🔥 Day streak: ${curStreak()}</p>
-  ${G.mode==="mock"?table({headers:["Topic","Score"],rows:TOPICS.map(t=>{const r=G.tr[t]||{n:0,r:0};return[t,`${r.r}/${r.n}`]})}):""}
-  ${G.new.length?`<p>New badges: ${G.new.map(k=>BADGES[k].i+" "+BADGES[k].n).join(", ")}</p>`:""}</div>
+  <p>Score: ${G.right}/${n} (${pct}%)<br>XP earned: ${G.xp}<br>Best combo: ${G.max}x<br>🔥 Day streak: ${curStreak()}${G.adaptive?`<br>🎚️ Difficulty now: level ${G.level}/3`:""}</p>
+  ${G.new.length?`<p>New badges: ${G.new.map(k=>BADGES[k].i+" "+BADGES[k].n).join(", ")}</p>`:""}
+  <p class="joke">😂 ${pick(JOKES)}</p></div>
   <div class="dock"><button class="main" onclick="start('${G.mode}')">Play again 🔁</button>
   <button class="alt" onclick="home()">Home</button></div>`;
   scrollTo(0,0);
@@ -319,19 +508,29 @@ function end(){
 
 // Desktop shortcuts (optional; every action also has a tap target)
 document.addEventListener("keydown",e=>{
-  if(!G||G.over||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.ctrlKey||e.metaKey||e.altKey||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;
+  if(M&&!M.over){
+    if(e.key>="1"&&e.key<="4"){e.preventDefault();mockSelect(+e.key-1)}
+    else if(e.key==="ArrowRight"||e.key==="Enter"){e.preventDefault();M.i<M.qs.length-1?mockGo(M.i+1):mockSubmit()}
+    else if(e.key==="ArrowLeft"){e.preventDefault();mockGo(M.i-1)}
+    return}
+  if(!G||G.over)return;
   if(!G.locked&&e.key>="1"&&e.key<="4"){const k=+e.key-1;if(k<G.qs[G.i].o.length){e.preventDefault();answer(k)}}
   else if(G.locked&&e.key==="Enter"){e.preventDefault();next()}
 });
 
-// Screen lock / app switch: pause the question timer, save the mock run, quiet the audio.
+// Screen lock / app switch: pause the timers, save the mock test, quiet the audio.
 document.addEventListener("visibilitychange",()=>{
   if(document.hidden){
+    if(M&&!M.over&&!M.paused){mockLeave();M.used+=Date.now()-M.resumeAt;M.paused=true;saveRun()}
     if(G&&!G.over&&!G.locked&&!G.paused){G.used+=Date.now()-G.resumeAt;G.paused=true}
-    saveRun();try{AC&&AC.state==="running"&&AC.suspend().catch(()=>{})}catch(e){}
-  }else if(G&&!G.over&&!G.locked&&G.paused){G.paused=false;G.resumeAt=Date.now();const n=$("#pause");if(n)n.hidden=false}
+    try{AC&&AC.state==="running"&&AC.suspend().catch(()=>{})}catch(e){}
+  }else{
+    if(M&&!M.over&&M.paused){M.paused=false;M.resumeAt=Date.now();M.qStart=Date.now();const n=$("#pause");if(n)n.hidden=false}
+    if(G&&!G.over&&!G.locked&&G.paused){G.paused=false;G.resumeAt=Date.now();const n=$("#pause");if(n)n.hidden=false}
+  }
 });
-addEventListener("pagehide",saveRun);
+addEventListener("pagehide",()=>{mockLeave();saveRun()});
 
 // Offline install: service workers only run over https (or localhost), never on file://.
 if("serviceWorker" in navigator&&(location.protocol==="https:"||/^(localhost|127\.0\.0\.1)$/.test(location.hostname)))
