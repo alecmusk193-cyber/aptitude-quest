@@ -36,6 +36,9 @@ th{background:var(--opt)}
 .face.happy::after{top:19px;border-top:0;border-radius:0 0 18px 18px}
 .face.sad::after{top:25px;border-bottom:0;border-radius:18px 18px 0 0}
 .face.wow::after{top:22px;left:15px;width:10px;height:11px;border-radius:50%}
+.face.cool::before{top:12px;left:7px;width:26px;height:6px;border-radius:1px 1px 6px 6px;border-top:2px solid #111;background:linear-gradient(90deg,#111 0 11px,transparent 11px 15px,#111 15px 26px);box-shadow:none}
+.face.cool::after{top:23px;left:15px;width:12px;height:5px;border:3px solid #222;border-top:0;border-left:0;border-radius:0 0 10px 0;transform:rotate(-10deg)}
+.joke{margin-top:6px;font-size:.92rem;opacity:.85;font-style:italic}
 .lvlup{margin:10px 0;padding:12px;border-radius:12px;text-align:center;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--gold));color:#fff;animation:pop .4s}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:9}
 @media(max-width:480px){body{place-items:start center;padding:10px}#app{padding:16px;border-radius:16px}.grid2{grid-template-columns:1fr}h2{font-size:1.1rem}}
@@ -65,26 +68,9 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 <script>
 const BANK=window.QUESTIONS||[];
 const TOPICS=["Quant","Logical","Verbal","DI"];
-const MEMES={
-good:["Big brain energy 🧠","Calculator? Never heard of her 💅","Stonks 📈","Absolute cinema 🎬","You did that. Tell your mom 🏆","Brain cells: 1, Procrastination: 0 🥊"],
-bad:["Task failed successfully 🫠","Ah yes, the classic 'I knew that' 🙃","This is fine 🔥☕ (it is not fine)","Brain.exe has stopped working 💥","Not like this 😭","Me after reading the question 5 times 👀"],
-time:["Time ran out. The clock said bye 👋⏰","You blinked. The timer didn't 😵","Thinking so hard you left the dimension 🌌"],
-near:{good:["Clutch! Answered with the clock on fumes ⏳🔥","Last-second genius. Heart rate: 180 💓","Living dangerously and still right 😅"],
-      bad:["Buzzer-beater... that missed 🏀😬","The clock pressured you and it worked 🫣","Panic mode: on. Accuracy: off 🚨"]},
-streak:{3:["Hat trick! 3 in a row 🎩","Three-peat! The brain is warming up ♨️"],
-        5:["5 in a row! You're on fire 🔥🔥","Five straight. Main character energy ✨"],
-        10:["10 IN A ROW. Unstoppable 🚀","Ten straight! Somebody call the exam board 📞"]}};
-const BADGES={
-first:{n:"First Steps",i:"🐣",d:"Get your first answer right"},
-speed:{n:"Speedrunner",i:"⚡",d:"Answer correctly in under 5 seconds"},
-fire:{n:"On Fire",i:"🔥",d:"Reach a 5x combo"},
-unstop:{n:"Unstoppable",i:"🚀",d:"Reach a 10x combo"},
-clutch:{n:"Clutch",i:"⏳",d:"Answer correctly in the last 3 seconds"},
-perfect:{n:"Perfect Run",i:"💎",d:"Get every question right in a run of 5+"},
-comeback:{n:"Comeback Kid",i:"🔁",d:"Fix a past mistake in Review mode"},
-daily:{n:"Daily Grinder",i:"📅",d:"Complete a daily challenge"},
-streak3:{n:"Habit Hero",i:"🗓️",d:"Keep a 3-day streak"},
-level5:{n:"Level 5",i:"🎖️",d:"Reach level 5"}};
+const MEMES={"good":["Big brain energy 🧠","Calculator? Never heard of her 💅","Stonks 📈","Absolute cinema 🎬","You did that. Tell your mom 🏆","Brain cells: 1, Procrastination: 0 🥊","Brain said 'I got this' and it did 🧠✨","Main character moment unlocked 🌟","No notes. Chef's kiss 👨‍🍳💋","You understood the assignment 📝✅","That answer was illegal-level smart 🚨😎","Neurons firing in 4K 🎥⚡","Certified smart cookie 🍪","Galaxy brain activated 🌌🧠","Correct! Your future self says thanks 🙏","Not a guess. Pure skill 🎯","The math is mathing today 📐💯","Slay, but make it aptitude 💅📊"],"bad":["Task failed successfully 🫠","Ah yes, the classic 'I knew that' 🙃","This is fine 🔥☕ (it is not fine)","Brain.exe has stopped working 💥","Not like this 😭","Me after reading the question 5 times 👀","Plot twist: that was not it 🌀","Oops! Every expert started here too 🌱","Wrong, but your vibes are immaculate 😌✨","Brain buffering... please try again 🔄","We don't lose, we learn. Respectfully 📚","My brain had 47 tabs open 🗂️😵","Close-ish! Next one's yours 💪","That answer was a side quest 🗺️😅","Mistakes are just XP in disguise 🎮","Not today, but definitely someday 🌅","Shake it off and lock in 🔒🧠","Even calculators need a reboot sometimes 🔌"],"time":["Time ran out. The clock said bye 👋⏰","You blinked. The timer didn't 😵","Thinking so hard you left the dimension 🌌","The timer said 'it's giving overtime' ⌛😬","Still thinking? The clock clocked out 🕰️💤","Brain loading... timer wasn't 🐢","Time's up! Deep thoughts though 🤔💭","You were vibing, the clock was not ⏱️🎶","Speedrun next time, bestie 🏃💨"],"near":{"good":["Clutch! Answered with the clock on fumes ⏳🔥","Last-second genius. Heart rate: 180 💓","Living dangerously and still right 😅","Saved by the final tick! ⏱️🙌","Cutting it close and nailing it 😤🎯","Last-moment legend behaviour 🦸⏳","The clock blinked first 😎⌛","Zero chill, full marks 🧊💯","Answered at 0.1% battery. Iconic 🔋🔥"],"bad":["Buzzer-beater... that missed 🏀😬","The clock pressured you and it worked 🫣","Panic mode: on. Accuracy: off 🚨","So close the clock felt bad 🥲⏰","Rushed it. The pressure was real 😮‍💨","Final-second gamble didn't pay 🎲😅","Clock: 1, You: 0. Rematch? ⚔️","Speed was there, accuracy took a nap 😴","Photo finish, wrong lane 📸🏁"]},"streak":{"3":["Hat trick! 3 in a row 🎩","Three-peat! The brain is warming up ♨️","Triple threat! Keep it rolling 🎲🔥","3 for 3. We see you 👀✨","Combo started! Don't stop now ▶️","Three wins. The warm-up is over 🏃‍♀️"],"5":["5 in a row! You're on fire 🔥🔥","Five straight. Main character energy ✨","5 streak! Brain is fully caffeinated ☕🧠","High five! Literally 🖐️🔥","Five in a row. Lowkey a genius 🤫💡","Combo x5! Lock in and keep going 🔒⚡"],"10":["10 IN A ROW. Unstoppable 🚀","Ten straight! Somebody call the exam board 📞","10 streak!! Legendary status 👑🌟","Double digits! Are you even human? 🤖💯","Ten straight. Write this in the history books 📜","x10 combo. The question bank is scared 😱🚀"]}};
+const JOKES=["I'm 100% sure about percentages... well, 99.9% 📊","Two trains leave a station. Both still have better time management than me 🚆","Why was the clock stressed? Too many hands on deck ⏰","Grammar tip: 'Your studying' vs 'You're studying' — only one is happening right now 📝","Profit and loss: I invested 2 hours and gained 1 nap 😴📉","Ratios are like friendships — keep them balanced ⚖️","Why did the average feel left out? It was always in the middle 📏","A pipe fills a tank in 3 hours. My motivation fills in 3 minutes 🚰","Synonym for 'study'? Future-flexing 💪📚","Simple interest is simple. Compound interest is my mood on exam week 📈","The angle between clock hands at 3:00? Right on time 🕒","Why don't odd numbers argue? They can't get even 🔢"];
+const BADGES={"first":{"n":"Hello World","i":"🌱","d":"Get your first answer right"},"speed":{"n":"Zoomies","i":"⚡","d":"Answer correctly in under 5 seconds"},"fire":{"n":"Heat Check","i":"🔥","d":"Reach a 5x combo"},"unstop":{"n":"No Brakes","i":"🚀","d":"Reach a 10x combo"},"clutch":{"n":"Buzzer Boss","i":"⏳","d":"Answer correctly in the last 3 seconds"},"perfect":{"n":"Flawless Era","i":"💎","d":"Get every question right in a run of 5+"},"comeback":{"n":"Glow Up","i":"🔁","d":"Fix a past mistake in Review mode"},"daily":{"n":"Daily Dose","i":"📅","d":"Complete a daily challenge"},"streak3":{"n":"Hat Trick Habit","i":"🗓️","d":"Keep a 3-day streak"},"level5":{"n":"High Five","i":"🖐️","d":"Reach level 5"}};
 const BOXW={1:16,2:8,3:4,4:2,5:1}; // Leitner: lower boxes are picked more often
 
 const $=s=>document.querySelector(s);
@@ -149,6 +135,7 @@ function home(msg){
     <button class="icon" onclick="toggleSound()" title="Sound on/off" aria-label="Toggle sound">${P.sound?"🔊":"🔇"}</button>
     <button class="icon" onclick="toggleTheme()" title="Dark/light" aria-label="Toggle theme">${P.theme==="light"?"🌙":"☀️"}</button></div></div>
   <p class="sub">Study hard. Meme harder.</p>
+  <p class="joke">😂 ${JOKES[Math.floor(seeded("joke-"+dayKey())()*JOKES.length)]}</p>
   ${msg?`<div class="note">${msg}</div>`:""}
   <div class="row"><b>Level ${lvl(P.xp)}</b><span>${P.xp} XP</span></div>
   <div class="bar"><div style="width:${P.xp%100}%"></div></div>
@@ -209,7 +196,7 @@ function answer(k){
     award("first");if(G.combo>=5)award("fire");if(G.combo>=10)award("unstop");
     if(secs<5)award("speed");if(near)award("clutch");if(G.mode==="review"&&wasBoxed)award("comeback");
     msg=pick(MEMES.streak[G.combo]||(near?MEMES.near.good:MEMES.good))+` <b>+${gain} XP</b>`;
-    face=near?"wow":"happy";SFX.good();
+    face=MEMES.streak[G.combo]?"cool":near?"wow":"happy";SFX.good();
   }else{
     G.lives--;G.combo=0;
     msg=pick(k===-1?MEMES.time:near?MEMES.near.bad:MEMES.bad);

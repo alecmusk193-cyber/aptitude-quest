@@ -1,51 +1,51 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-09T06:24:50.708Z",
+  "updated": "2026-11-09T06:26:02.766Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
       "state": "working",
-      "task": "Waiting for batches; merge + validator ready",
-      "progress": 20,
-      "updated": "2026-11-09T06:24:50.687Z"
+      "task": "Merged fun-writer captions, jokes, badges into game",
+      "progress": 30,
+      "updated": "2026-11-09T06:25:52.587Z"
     },
     {
       "id": "qw-quant",
       "name": "Question Writer · Quant",
       "avatar": "🧮",
-      "state": "working",
-      "task": "Writing Quant batch of 25",
-      "progress": 5,
-      "updated": "2026-11-09T06:24:35.759Z"
+      "state": "done",
+      "task": "Delivered 25 Quant questions",
+      "progress": 100,
+      "updated": "2026-11-09T06:25:59.436Z"
     },
     {
       "id": "qw-logical",
       "name": "Question Writer · Logical",
       "avatar": "🧩",
-      "state": "working",
-      "task": "Writing Logical batch of 25",
-      "progress": 5,
-      "updated": "2026-11-09T06:24:35.800Z"
+      "state": "done",
+      "task": "Delivered 25 Logical questions",
+      "progress": 100,
+      "updated": "2026-11-09T06:26:02.766Z"
     },
     {
       "id": "qw-verbal",
       "name": "Question Writer · Verbal",
       "avatar": "📖",
-      "state": "working",
-      "task": "Writing Verbal batch of 25",
-      "progress": 5,
-      "updated": "2026-11-09T06:24:37.046Z"
+      "state": "checking",
+      "task": "Self-checking Verbal items",
+      "progress": 85,
+      "updated": "2026-11-09T06:25:49.685Z"
     },
     {
       "id": "qw-di",
       "name": "Question Writer · DI",
       "avatar": "📊",
       "state": "working",
-      "task": "Writing DI batch of 25",
-      "progress": 5,
-      "updated": "2026-11-09T06:24:35.565Z"
+      "task": "Drafted 25 DI questions",
+      "progress": 50,
+      "updated": "2026-11-09T06:26:01.387Z"
     },
     {
       "id": "fact-checker",
@@ -60,10 +60,10 @@ window.AGENT_STATUS = {
       "id": "fun-writer",
       "name": "Fun Writer",
       "avatar": "🎭",
-      "state": "working",
-      "task": "Writing meme captions",
-      "progress": 5,
-      "updated": "2026-11-09T06:24:36.052Z"
+      "state": "done",
+      "task": "Delivered captions, jokes, badges",
+      "progress": 100,
+      "updated": "2026-11-09T06:25:21.590Z"
     }
   ]
 };
