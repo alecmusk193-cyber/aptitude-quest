@@ -78,6 +78,27 @@ details.rv summary .grow{flex:1;min-width:0;font-weight:500;font-size:.92rem}
 .lvtag{padding:1px 8px;border-radius:99px;background:var(--opt);font-size:.85rem}
 .lvchg{border-left-color:var(--accent)}
 #fb h3{margin:16px 0 4px}
+.mmcard{margin:14px 0 6px;padding:16px 14px;border-radius:16px;background:var(--opt);text-align:center}
+.mmcat{font-size:.85rem;opacity:.75}
+.mmq{margin:8px 0 4px;font-size:2.1rem;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.mmnote{font-size:.9rem;opacity:.8}
+.mmans{margin-top:12px;min-height:54px;padding:8px 12px;border-radius:12px;background:var(--card);border:2px solid var(--line);font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums}
+.mmans.ok{border-color:var(--good);background:var(--goodbg)}.mmans.bad{border-color:var(--bad);background:var(--badbg)}
+.keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.key{min-height:52px;padding:0;border:0;border-radius:12px;background:var(--opt);font-size:1.35rem;font-weight:700;font-variant-numeric:tabular-nums}
+.key.fn{background:var(--track)}.key.go{grid-column:span 2;background:var(--accent);color:#fff;font-size:1.1rem}
+.key:active{transform:scale(.96)}
+.keypad.fb .key:not(.go){display:none}.keypad.fb .key.go{grid-column:1/-1}
+#mmFb{scroll-margin-bottom:100px}
+.mmlist{display:grid;gap:8px}
+.mmrow{display:flex;align-items:center;gap:10px;width:100%;min-height:56px;padding:10px 14px;border-radius:14px;border:2px solid transparent;background:var(--opt);text-align:left}
+@media(hover:hover){.mmrow:hover{border-color:var(--accent)}}
+.stars{flex:none;color:var(--gold);letter-spacing:2px}
+.mmbtn{border-color:var(--gold)}
+.lead{font-size:1.05rem;line-height:1.5}
+.steps{margin:6px 0;padding-left:22px;line-height:1.5}.steps li{margin:4px 0}
+.mmex{margin:10px 0;padding:12px;border-radius:12px;background:var(--opt)}.mmexq{font-size:1.15rem;font-variant-numeric:tabular-nums}
+
 
 .face{flex:none;position:relative;width:40px;height:40px;border-radius:50%;background:var(--gold);box-shadow:inset -3px -3px 0 #0002}
 .face::before{content:"";position:absolute;top:13px;left:11px;width:5px;height:6px;border-radius:50%;background:#222;box-shadow:13px 0 #222}
@@ -120,6 +141,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <div id="app"></div>
 <script src="questions.js"></script>
 <script src="generator.js"></script>
+<script src="mentalmath.js"></script>
 <script>
 const TOPICS=["Quant","Logical","Verbal","DI","SJT"];
 const TOPIC_NAME={Quant:"Quant",Logical:"Logical",Verbal:"Verbal",DI:"Data (DI)",SJT:"Situational (SJT)"};
@@ -145,7 +167,7 @@ const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayKey(d)};
 function seeded(str){let h=2166136261;for(const c of str)h=Math.imul(h^c.charCodeAt(0),16777619);
   return()=>{h=h+0x6D2B79F5|0;let t=Math.imul(h^h>>>15,1|h);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true,adapt:{}});
+const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true,adapt:{},mm:{lv:{},st:{},sprint:0}});
 function load(){try{return Object.assign(DEF(),JSON.parse(localStorage.getItem("aq"))||{})}catch(e){return DEF()}}
 function save(){try{localStorage.setItem("aq",JSON.stringify(P))}catch(e){}}
 let P=load(),G=null,topic="All",tick;
@@ -377,8 +399,120 @@ function doImport(){const out=$("#impres"),raw=$("#imp").value.trim();
 function impClear(){if(!confirm(`Remove all ${CUSTOM.length} imported questions from this device?`))return;
   try{localStorage.removeItem(CUSTOM_KEY)}catch(e){}CUSTOM=[];BANK=BANK.filter(q=>!q.custom);importScreen()}
 
+// ---- Mental Math Gym: lessons, per-trick practice (adaptive), mixed drill, 60-second sprint ----
+const MMX=window.MM||null;let MMS=null;
+const mmSt=id=>P.mm.st[id]||(P.mm.st[id]={n:0,r:0,t:0});
+const mmLv=id=>P.mm.lv[id]||1;
+const MM_TARGET=[0,8,12,15];                       // seconds that count as "fast" at levels 1-3
+const stars=lv=>"★".repeat(lv)+"☆".repeat(3-lv);
+const mmElapsed=()=>MMS.used+(MMS.paused?0:Date.now()-MMS.t0);
+const mmTrick=id=>MMX.tricks.find(t=>t.id===id);
+const mmSteps=how=>`<ol class="steps">${how.map(h=>`<li>${esc(h)}</li>`).join("")}</ol>`;
+function mmLeaveAll(){clearInterval(tick);if(MMS)clearTimeout(MMS.fbT);MMS=null;if(G)G.over=true;if(M&&!M.over){mockLeave();saveRun()}M=null}
+function mmHub(msg){mmLeaveAll();if(!MMX)return home("The mental math module didn't load.");
+  const all=MMX.tricks,n=all.reduce((s,t)=>s+mmSt(t.id).n,0),r=all.reduce((s,t)=>s+mmSt(t.id).r,0);
+  const mastered=all.filter(t=>{const s=mmSt(t.id);return mmLv(t.id)===3&&s.n>=5&&s.r/s.n>=.8}).length;
+  const weak=all.filter(t=>mmSt(t.id).n>=5).map(t=>{const s=mmSt(t.id);return{t,score:s.r/s.n-(s.t/s.n)/60}}).sort((a,b)=>a.score-b.score)[0];
+  $("#app").innerHTML=`<div class="screen">
+  <div class="qhead"><button class="icon" onclick="home()" aria-label="Back to home">✕</button><span class="grow"><b>🧮 Mental math gym</b></span>${soundBtn()}</div>
+  <p class="sub">Learn a trick, drill it until it's automatic, then race the clock.</p>
+  ${msg?`<div class="note">${msg}</div>`:""}
+  <div class="cards">
+    <div class="card"><div class="big">⚡ ${P.mm.sprint||0}</div><small>best sprint</small></div>
+    <div class="card"><div class="big">🎯 ${n?Math.round(r/n*100)+"%":"–"}</div><small>accuracy</small></div>
+    <div class="card"><div class="big">🏅 ${mastered}/${all.length}</div><small>mastered</small></div></div>
+  <div class="grid2"><button class="alt" onclick="mmStart('sprint')">⚡ 60-second sprint</button><button class="alt" onclick="mmStart('mixed')">🎯 Mixed drill · 15</button></div>
+  ${weak?`<div class="weak"><div><b>Focus: ${esc(weak.t.name)}</b><br><small>${Math.round(mmSt(weak.t.id).r/mmSt(weak.t.id).n*100)}% · ${(mmSt(weak.t.id).t/mmSt(weak.t.id).n).toFixed(1)}s avg</small></div><button class="alt" onclick="mmLesson('${weak.t.id}')">Revise</button></div>`
+    :`<div class="weak"><small>New here? Start with "Multiply by 5, 25 and 125", read the lesson, then practise it.</small></div>`}
+  <p class="small">★ = your level for each trick. Answer correctly and fast 3 times in a row to level up.</p>
+  ${MMX.cats.map(c=>`<h3>${esc(c)}</h3><div class="mmlist">${all.filter(t=>t.cat===c).map(t=>{const s=mmSt(t.id);
+    return`<button class="mmrow" onclick="mmLesson('${t.id}')"><span class="grow"><b>${esc(t.name)}</b><br><small>${s.n?`${Math.round(s.r/s.n*100)}% · ${(s.t/s.n).toFixed(1)}s avg · ${s.n} done`:"Not started"}</small></span><span class="stars" aria-label="Level ${mmLv(t.id)} of 3">${stars(mmLv(t.id))}</span></button>`}).join("")}</div>`).join("")}
+  </div>
+  <div class="dock"><button class="main" onclick="mmStart('mixed')">Start mixed drill ▶</button></div>`;scrollTo(0,0)}
+function mmLesson(id){const t=mmTrick(id);if(!t)return mmHub();mmLeaveAll();
+  $("#app").innerHTML=`<div class="screen">
+  <div class="qhead"><button class="icon" onclick="mmHub()" aria-label="Back to the gym">✕</button><span class="grow"><b>${esc(t.name)}</b><br><small>${esc(t.cat)} · your level ${stars(mmLv(id))}</small></span></div>
+  <p class="lead">${esc(t.lesson.idea)}</p>
+  <h3>How it works</h3>${mmSteps(t.lesson.steps)}
+  <h3>Worked examples</h3>${MMX.examples(id).map(e=>`<div class="mmex"><div class="mmexq">${esc(e.q)} = <b>${esc(MMX.fmtAns(e))}</b></div>${mmSteps(e.how)}</div>`).join("")}
+  <div class="tip">⚠️ Watch out: ${esc(t.lesson.watch)}</div></div>
+  <div class="dock"><button class="main" onclick="mmStart('trick','${id}')">Practise this trick ▶</button></div>`;scrollTo(0,0)}
+function mmStart(mode,id){if(!MMX)return;mmLeaveAll();G=null;SFX.click();
+  MMS={mode,id,i:0,n:mode==="sprint"?Infinity:mode==="trick"?10:15,right:0,items:[],missed:[],cnt:{},xp:0,
+       sprintEnd:mode==="sprint"?Date.now()+60000:0,pausedLeft:0,paused:false,used:0,t0:Date.now()};
+  mmNext()}
+function mmPickTrick(){if(MMS.mode==="trick")return MMS.id;
+  const all=MMX.tricks.map(t=>{const s=mmSt(t.id),acc=s.n?s.r/s.n:.5;return{id:t.id,w:MMS.mode==="sprint"?1:1+(1-acc)*3+(s.n<5?1:0)}});
+  let x=Math.random()*all.reduce((s,a)=>s+a.w,0);for(const a of all)if((x-=a.w)<=0)return a.id;return all[0].id}
+function mmNext(){if(!MMS)return;clearTimeout(MMS.fbT);
+  if(MMS.mode!=="sprint"&&MMS.i>=MMS.n)return mmResults();
+  const id=mmPickTrick(),lv=MMS.mode==="sprint"?Math.min(2,mmLv(id)):mmLv(id);
+  Object.assign(MMS,{cur:MMX.make(id,lv),input:"",state:"ask",hint:false,t0:Date.now(),used:0});mmRender()}
+function mmRender(){const it=MMS.cur,t=mmTrick(it.trick),sp=MMS.mode==="sprint",left=sp?MMS.sprintEnd-Date.now():0;
+  $("#app").innerHTML=`<div class="screen">
+  <div class="qhead"><button class="icon" onclick="mmQuit()" aria-label="Back to the gym">✕</button>
+    <span class="grow">${sp?"⚡ Sprint":MMS.mode==="trick"?"🎯 Practice":"🧮 Mixed drill"} · ${sp?`${MMS.right} correct`:`Q ${MMS.i+1}/${MMS.n}`}</span>
+    <b class="clock" id="mmClock" role="timer">${sp?mmss(left):"0.0s"}</b></div>
+  ${sp?`<div class="bar"><div id="mmBar" style="width:${Math.max(0,left/600)}%"></div></div>`:""}
+  <div class="note" id="pause" hidden>⏸ Paused while you were away.</div>
+  <div class="mmcard"><div class="mmcat">${esc(t.name)} · ${stars(it.level)}</div>
+    <div class="mmq">${esc(it.q)}</div>${it.note?`<div class="mmnote">${esc(it.note)}</div>`:""}
+    <div class="mmans" id="mmIn" aria-live="polite" aria-label="Your answer">&nbsp;</div></div>
+  <div id="mmFb"></div></div>
+  <div class="dock"><div class="keypad">${["7","8","9","⌫","4","5","6","−","1","2","3","."].map(k=>`<button class="key${/[⌫−.]/.test(k)?" fn":""}" onclick="mmKey('${k}')" aria-label="${k==="⌫"?"Delete":k==="−"?"Minus":k==="."?"Decimal point":k}">${k}</button>`).join("")}
+    <button class="key" onclick="mmKey('0')">0</button>${sp?`<button class="key fn" onclick="mmKey('skip')">Skip</button>`:`<button class="key fn" onclick="mmKey('hint')" aria-label="Hint">💡</button>`}<button class="key go" id="mmGo" onclick="mmKey('ok')">Check ✓</button></div></div>`;
+  scrollTo(0,0);clearInterval(tick);tick=setInterval(mmTick,100)}
+function mmTick(){if(!MMS||MMS.paused)return;const c=$("#mmClock");
+  if(MMS.mode==="sprint"){const l=MMS.sprintEnd-Date.now(),b=$("#mmBar");if(c){c.textContent=mmss(l);c.classList.toggle("warn",l<=10000)}if(b)b.style.width=Math.max(0,l/600)+"%";if(l<=0)mmResults()}
+  else if(MMS.state==="ask"&&c)c.textContent=(mmElapsed()/1000).toFixed(1)+"s"}
+function mmKey(k){if(!MMS)return;
+  if(MMS.state==="fb"){if(k==="ok")mmNext();return}
+  if(k==="ok")return mmCheck(false);
+  if(k==="skip")return mmCheck(true);
+  if(k==="hint"){if(!MMS.hint){MMS.hint=true;$("#mmFb").innerHTML=`<div class="tip">💡 ${esc(MMS.cur.how[0])}</div>`}return}
+  let s=MMS.input;
+  if(k==="⌫")s=s.slice(0,-1);else if(k==="−")s=s.startsWith("-")?s.slice(1):"-"+s;
+  else if(k===".")s=s.includes(".")?s:(/^-?$/.test(s)?s+"0.":s+".");
+  else if(s.replace(/[-.]/g,"").length<9)s=/^-?0$/.test(s)?s.replace("0",k):s+k;
+  MMS.input=s;$("#mmIn").textContent=s?s.replace("-","−"):" "}
+function mmCheck(skip){const it=MMS.cur;if(!skip&&!/\d/.test(MMS.input))return;
+  const secs=mmElapsed()/1000,ok=!skip&&MMX.check(it,MMS.input),st=mmSt(it.trick),fast=ok&&!MMS.hint&&secs<=MM_TARGET[it.level];
+  st.n++;if(ok)st.r++;st.t+=Math.min(secs,60);MMS.i++;MMS.items.push({it,ok,secs});
+  let ch=0;if(MMS.mode!=="sprint"){const c=MMS.cnt[it.trick]||(MMS.cnt[it.trick]={up:0,down:0});
+    if(fast){c.up++;c.down=0;if(c.up>=3&&it.level<3)ch=1}else if(!ok){c.down++;c.up=0;if(c.down>=2&&it.level>1)ch=-1}
+    if(ch){c.up=0;c.down=0;P.mm.lv[it.trick]=it.level+ch}}
+  if(ok){MMS.right++;MMS.xp+=MMS.mode==="sprint"?2:fast?4:3;SFX.good();buzz(20)}else{MMS.missed.push({it,input:skip?"":MMS.input});SFX.bad();buzz([50,40,50])}
+  save();$("#mmIn").classList.add(ok?"ok":"bad");MMS.state="fb";
+  if(MMS.mode==="sprint"){if(ok)return mmNext();
+    $("#mmFb").innerHTML=`<div class="trap">✗ ${esc(it.q)} = <b>${esc(MMX.fmtAns(it))}</b></div>`;MMS.fbT=setTimeout(()=>{if(MMS&&MMS.state==="fb")mmNext()},900);return}
+  $("#mmFb").innerHTML=`<div class="meme ${ok?"good":"bad"}" role="status"><span class="face ${ok?(fast?"cool":"happy"):"sad"}"></span><span>${ok?pick(fast?["Lightning fast ⚡","Speed demon 🏎️","Calculator who? 💅","Brain on turbo mode 🚀"]:MEMES.good)+` · ${secs.toFixed(1)}s`:pick(MEMES.bad)}</span></div>
+  ${ok?"":`<div class="trap">Answer: <b>${esc(MMX.fmtAns(it))}</b>${skip?"":` · you typed ${esc(MMS.input.replace("-","−"))}`}</div>`}
+  ${ch?`<div class="note lvchg">${ch>0?"📈 Level up":"📉 Level down"}: ${stars(it.level+ch)} · ${pick(ch>0?FUN2.levelUp:FUN2.levelDown)}</div>`:""}
+  ${ok&&!fast&&!MMS.hint?`<p class="small">Correct. Aim for under ${MM_TARGET[it.level]}s without the hint to level up.</p>`:""}
+  <details class="more"${ok?"":" open"}><summary>Method</summary>${mmSteps(it.how)}</details>`;
+  document.querySelector(".keypad").classList.add("fb");
+  $("#mmGo").textContent=MMS.i>=MMS.n?"Results ▶":"Next ▶";
+  $("#mmFb").scrollIntoView({block:"nearest",behavior:reduced()?"auto":"smooth"})}
+function mmQuit(){if(MMS&&MMS.mode!=="sprint"&&MMS.items.length)return mmResults();mmHub("Drill stopped. Your progress on each answer is saved.")}
+function mmResults(){if(!MMS)return;clearInterval(tick);clearTimeout(MMS.fbT);const S=MMS;MMS=null;
+  const n=S.items.length,acc=n?Math.round(S.right/n*100):0,avg=n?S.items.reduce((s,x)=>s+x.secs,0)/n:0;
+  let best=false;if(S.mode==="sprint"&&S.right>(P.mm.sprint||0)){P.mm.sprint=S.right;best=S.right>0}
+  const before=lvl(P.xp);P.xp+=S.xp;const up=lvl(P.xp)>before;G={new:[],over:true};if(lvl(P.xp)>=5)award("level5");save();
+  const byT={};S.items.forEach(x=>{const b=byT[x.it.trick]||(byT[x.it.trick]={n:0,r:0,t:0});b.n++;if(x.ok)b.r++;b.t+=x.secs});
+  const band=acc>=85?"top":acc>=65?"good":acc>=45?"mid":"low";
+  $("#app").innerHTML=`<div class="screen">
+  <h1>${S.mode==="sprint"?"⚡ Sprint over":"🧮 Drill complete"}</h1>
+  ${up?`<div class="lvlup">⬆️ Level up! You're now level ${lvl(P.xp)}</div>`:""}
+  <div class="score"><div class="big">${S.mode==="sprint"?S.right:`${S.right}/${n}`}</div><div>${S.mode==="sprint"?`correct in 60 seconds${best?" · 🏆 new best!":` · best ${P.mm.sprint||0}`}`:`${acc}% · ${avg.toFixed(1)}s per question`} · +${S.xp} XP</div></div>
+  <div class="meme ${acc>=65?"good":"bad"}" role="status"><span class="face ${acc>=85?"cool":acc>=65?"happy":acc>=45?"wow":"sad"}"></span><span>${pick(FUN2.mock[band])}</span></div>
+  ${Object.keys(byT).length>1?`<h3>By trick</h3>${table({headers:["Trick","Score","Avg"],rows:Object.entries(byT).map(([id,b])=>[mmTrick(id).name,`${b.r}/${b.n}`,(b.t/b.n).toFixed(1)+"s"])})}`:""}
+  ${S.missed.length?`<h3>Review your misses</h3>${S.missed.map(m=>`<details class="rv bad"><summary><span aria-hidden="true">❌</span><span class="grow">${esc(m.it.q)} = ${esc(MMX.fmtAns(m.it))}${m.input?` · you: ${esc(m.input.replace("-","−"))}`:""}</span></summary>${mmSteps(m.it.how)}<button class="chip" onclick="mmLesson('${m.it.trick}')">Open the lesson</button></details>`).join("")}`:n?`<p>No misses. Clean sheet 🎯</p>`:""}
+  <p class="joke">😂 ${pick(JOKES)}</p></div>
+  <div class="dock"><div class="btns2"><button class="alt" onclick="mmHub()">Gym</button><button class="main" onclick="mmStart('${S.mode}'${S.id?`,'${S.id}'`:""})">Again 🔁</button></div></div>`;
+  scrollTo(0,0);if(up){confetti();SFX.level()}else SFX.badge()}
+
 function home(msg){
-  clearInterval(tick);if(G)G.over=true;if(M&&!M.over){mockLeave();saveRun()}M=null;
+  clearInterval(tick);if(MMS)clearTimeout(MMS.fbT);MMS=null;if(G)G.over=true;if(M&&!M.over){mockLeave();saveRun()}M=null;
   const w=weakest(),due=dueKeys().length,dd=P.daily.date===dayKey(),run=loadRun(),al=P.adapt[topic]||1;
   $("#app").innerHTML=`<div class="screen">
   <div class="top"><h1>🧠 Aptitude Quest</h1><div class="tools">${soundBtn()}
@@ -398,6 +532,7 @@ function home(msg){
   <div class="grid2">
     <button class="alt" onclick="start('daily')">📅 Daily${dd?` ✓ ${P.daily.score}/${P.daily.n}`:" challenge"}</button>
     <button class="alt" onclick="start('review')">🔁 Review (${due})</button>
+    <button class="alt wide mmbtn" onclick="mmHub()">🧮 Mental math gym · tricks, drills, sprint</button>
     <button class="alt wide" onclick="startMock()">📝 ${run?"New mock test (replaces saved)":"Mock test · 20 questions · 20 min · no hints"}</button>
     <button class="alt wide" onclick="importScreen()">📥 Import questions${CUSTOM.length?` (${CUSTOM.length} added)`:""}</button></div>
   ${w?`<div class="weak"><div><b>🎯 Weakest topic: ${TOPIC_NAME[w.t]}</b><br><small>${Math.round(w.acc*100)}% accuracy · ${w.avg.toFixed(1)}s avg</small></div>
@@ -509,6 +644,7 @@ function end(){
 // Desktop shortcuts (optional; every action also has a tap target)
 document.addEventListener("keydown",e=>{
   if(e.ctrlKey||e.metaKey||e.altKey||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;
+  if(MMS){const map={Backspace:"⌫",Enter:"ok","-":"−",".":".",",":".",h:"hint",H:"hint"};const k=/^[0-9]$/.test(e.key)?e.key:map[e.key];if(k){e.preventDefault();mmKey(k)}return}
   if(M&&!M.over){
     if(e.key>="1"&&e.key<="4"){e.preventDefault();mockSelect(+e.key-1)}
     else if(e.key==="ArrowRight"||e.key==="Enter"){e.preventDefault();M.i<M.qs.length-1?mockGo(M.i+1):mockSubmit()}
@@ -523,9 +659,11 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("visibilitychange",()=>{
   if(document.hidden){
     if(M&&!M.over&&!M.paused){mockLeave();M.used+=Date.now()-M.resumeAt;M.paused=true;saveRun()}
+    if(MMS&&!MMS.paused){if(MMS.mode==="sprint")MMS.pausedLeft=MMS.sprintEnd-Date.now();else MMS.used+=Date.now()-MMS.t0;MMS.paused=true}
     if(G&&!G.over&&!G.locked&&!G.paused){G.used+=Date.now()-G.resumeAt;G.paused=true}
     try{AC&&AC.state==="running"&&AC.suspend().catch(()=>{})}catch(e){}
   }else{
+    if(MMS&&MMS.paused){MMS.paused=false;if(MMS.mode==="sprint")MMS.sprintEnd=Date.now()+MMS.pausedLeft;else MMS.t0=Date.now();const n=$("#pause");if(n)n.hidden=false}
     if(M&&!M.over&&M.paused){M.paused=false;M.resumeAt=Date.now();M.qStart=Date.now();const n=$("#pause");if(n)n.hidden=false}
     if(G&&!G.over&&!G.locked&&G.paused){G.paused=false;G.resumeAt=Date.now();const n=$("#pause");if(n)n.hidden=false}
   }

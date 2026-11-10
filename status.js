@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-09T07:19:51.387Z",
+  "updated": "2026-11-10T02:56:01.327Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
       "state": "done",
-      "task": "v2 done: 156 questions + generator; 1 rejected",
+      "task": "Mental math gym shipped: 18 tricks",
       "progress": 100,
-      "updated": "2026-11-09T07:19:51.387Z"
+      "updated": "2026-11-10T02:56:01.327Z"
     },
     {
       "id": "qw-quant",
