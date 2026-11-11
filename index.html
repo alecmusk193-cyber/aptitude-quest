@@ -535,7 +535,8 @@ const gdT=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
 const gdP=()=>P.guide||(P.guide={read:{},chk:{}});
 function gdFind(id){for(const T of GD){const i=T.chapters.findIndex(c=>c.id===id);if(i>=0)return{T,C:T.chapters[i],i}}return null}
 const gdNext=list=>{for(const T of list)for(const C of T.chapters)if(!gdP().read[C.id])return{T,C};return null};
-const gdList=items=>items.map(x=>`<li>${gdT(x)}</li>`).join("");
+// Items inside numbered lists may already start with "1." — drop it so numbers don't double up.
+const gdList=(items,ol)=>items.map(x=>`<li>${gdT(ol?String(x).replace(/^\s*\d+[.)]\s+/,""):x)}</li>`).join("");
 function guideHub(){mmLeaveAll();if(!GD.length)return home("The study guide didn't load.");
   const tot=GD.reduce((s,T)=>s+T.chapters.length,0),read=GD.reduce((s,T)=>s+T.chapters.filter(c=>gdP().read[c.id]).length,0),nx=gdNext(GD);
   $("#app").innerHTML=`<div class="screen">
@@ -558,12 +559,12 @@ function guideTopic(id){const T=GD.find(t=>t.id===id);if(!T)return guideHub();mm
   <div class="dock"><button class="main" onclick="guideChapter('${(nx?nx.C:T.chapters[0]).id}')">${nx?(nx.C===T.chapters[0]?"Bắt đầu học ▶":"Học tiếp ▶"):"Ôn lại từ đầu ▶"}</button></div>`;scrollTo(0,0)}
 function guideBlock(C,b,k){
   if(b.t==="p")return`<p>${gdT(b.text)}</p>`;
-  if(b.t==="fast")return`<div class="gbox fast"><div class="gh">⚡ ${esc(b.title||"Cách nhanh nhất")}</div><ol>${gdList(b.items)}</ol></div>`;
+  if(b.t==="fast")return`<div class="gbox fast"><div class="gh">⚡ ${esc(b.title||"Cách nhanh nhất")}</div><ol>${gdList(b.items,1)}</ol></div>`;
   if(b.t==="remember")return`<div class="gbox rem"><div class="gh">🧠 ${esc(b.title||"Cần nhớ")}</div><ul>${gdList(b.items)}</ul></div>`;
   if(b.t==="trap")return`<div class="gbox trapb"><div class="gh">🪤 ${esc(b.title||"Bẫy hay gặp")}</div><ul>${gdList(b.items)}</ul></div>`;
   if(b.t==="table")return`${b.caption?`<p class="small"><b>${gdT(b.caption)}</b></p>`:""}${table({headers:b.headers,rows:b.rows})}`;
   if(b.t==="example")return`<div class="gex"><div class="gh">✍️ ${esc(b.title||"Ví dụ")}</div><p class="gq">${gdT(b.q)}</p>
-    <details class="more"><summary>Tự giải trước, rồi bấm để xem lời giải</summary><ol class="steps">${gdList(b.steps)}</ol><p><b>Đáp án:</b> ${gdT(b.answer)}</p>${b.fast?`<div class="tip">⚡ Cách nhanh: ${gdT(b.fast)}</div>`:""}</details></div>`;
+    <details class="more"><summary>Tự giải trước, rồi bấm để xem lời giải</summary><ol class="steps">${gdList(b.steps,1)}</ol><p><b>Đáp án:</b> ${gdT(b.answer)}</p>${b.fast?`<div class="tip">⚡ Cách nhanh: ${gdT(b.fast)}</div>`:""}</details></div>`;
   if(b.t==="check"){const prev=gdP().chk[C.id+"#"+k];
     return`<div class="gchk" id="gc${k}"><div class="gh">✅ Tự kiểm tra</div><p class="gq">${gdT(b.q)}</p>
     <div class="opts">${b.o.map((o,j)=>`<button class="opt" onclick="guideCheck('${C.id}',${k},${j})"><kbd>${"ABCD"[j]}</kbd><span>${gdT(o)}</span></button>`).join("")}</div>
