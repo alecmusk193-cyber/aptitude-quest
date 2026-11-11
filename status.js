@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-11T07:23:26.011Z",
+  "updated": "2026-11-11T07:24:33.366Z",
   "agents": [
     {
       "id": "manager",
@@ -240,10 +240,10 @@ window.AGENT_STATUS = {
       "id": "gw-dilogic",
       "name": "Guide Writer · DI + Logical",
       "avatar": "📊",
-      "state": "done",
-      "progress": 100,
-      "task": "DI (5 ch) + Logical (7 ch) done, verified",
-      "updated": "2026-11-11T07:21:28.741Z"
+      "state": "working",
+      "progress": 50,
+      "task": "Fixing checker findings",
+      "updated": "2026-11-11T07:24:33.136Z"
     },
     {
       "id": "gw-verbalsjt",
@@ -276,19 +276,19 @@ window.AGENT_STATUS = {
       "id": "gfc-dilogic",
       "name": "Guide Checker · DI + Logical",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 5,
-      "task": "Reading DI + Logical",
-      "updated": "2026-11-11T07:21:56.749Z"
+      "state": "done",
+      "progress": 100,
+      "task": "dilogic: 7 issues",
+      "updated": "2026-11-11T07:24:05.020Z"
     },
     {
       "id": "gfc-verbalsjt",
       "name": "Guide Checker · Verbal + SJT",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 50,
-      "task": "Verbal done; checking SJT",
-      "updated": "2026-11-11T07:23:26.011Z"
+      "state": "done",
+      "progress": 100,
+      "task": "verbalsjt: 9 issues",
+      "updated": "2026-11-11T07:24:33.366Z"
     }
   ]
 };
