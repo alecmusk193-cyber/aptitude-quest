@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-10T02:56:01.327Z",
+  "updated": "2026-11-11T07:28:58.907Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
       "state": "done",
-      "task": "Mental math gym shipped: 18 tricks",
+      "task": "Study guide shipped: 41 chapters, fact-checked",
       "progress": 100,
-      "updated": "2026-11-10T02:56:01.327Z"
+      "updated": "2026-11-11T07:28:58.907Z"
     },
     {
       "id": "qw-quant",
@@ -217,6 +217,78 @@ window.AGENT_STATUS = {
       "progress": 100,
       "task": "sjt: 25 ok, 0 flagged",
       "updated": "2026-11-09T07:16:14.859Z"
+    },
+    {
+      "id": "gw-mental",
+      "name": "Guide Writer · Mental math",
+      "avatar": "🧮",
+      "state": "done",
+      "progress": 100,
+      "task": "QA fixes applied; both guides VALID",
+      "updated": "2026-11-11T07:24:52.411Z"
+    },
+    {
+      "id": "gw-quant",
+      "name": "Guide Writer · Quant",
+      "avatar": "🔢",
+      "state": "done",
+      "progress": 100,
+      "task": "QA fixes applied, re-verified",
+      "updated": "2026-11-11T07:21:43.715Z"
+    },
+    {
+      "id": "gw-dilogic",
+      "name": "Guide Writer · DI + Logical",
+      "avatar": "📊",
+      "state": "done",
+      "progress": 100,
+      "task": "7 checker findings fixed, re-verified",
+      "updated": "2026-11-11T07:24:54.416Z"
+    },
+    {
+      "id": "gw-verbalsjt",
+      "name": "Guide Writer · Verbal + SJT",
+      "avatar": "📖",
+      "state": "done",
+      "progress": 100,
+      "task": "QA fixes applied; Verbal + SJT done",
+      "updated": "2026-11-11T07:25:32.976Z"
+    },
+    {
+      "id": "gfc-quant",
+      "name": "Guide Checker · Quant",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "quant: 10 issues",
+      "updated": "2026-11-11T07:20:32.915Z"
+    },
+    {
+      "id": "gfc-mental",
+      "name": "Guide Checker · Mental + Strategy",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "Re-check: 29/29 resolved, 2 new issues",
+      "updated": "2026-11-11T07:26:23.557Z"
+    },
+    {
+      "id": "gfc-dilogic",
+      "name": "Guide Checker · DI + Logical",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "dilogic: 7 issues",
+      "updated": "2026-11-11T07:24:05.020Z"
+    },
+    {
+      "id": "gfc-verbalsjt",
+      "name": "Guide Checker · Verbal + SJT",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "verbalsjt: 9 issues",
+      "updated": "2026-11-11T07:24:33.366Z"
     }
   ]
 };
