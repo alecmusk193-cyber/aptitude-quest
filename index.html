@@ -95,6 +95,21 @@ details.rv summary .grow{flex:1;min-width:0;font-weight:500;font-size:.92rem}
 @media(hover:hover){.mmrow:hover{border-color:var(--accent)}}
 .stars{flex:none;color:var(--gold);letter-spacing:2px}
 .mmbtn{border-color:var(--gold)}
+.gread{-webkit-user-select:text;user-select:text}.gread p{line-height:1.6}
+.gbox{margin:12px 0;padding:12px 14px;border-radius:12px;background:var(--opt);border-left:4px solid var(--accent)}
+.gbox.fast{border-left-color:var(--gold)}.gbox.rem{border-left-color:var(--good)}.gbox.trapb{border-left-color:var(--bad)}
+.gh{margin-bottom:6px;font-weight:800}
+.gbox ol,.gbox ul{margin:0;padding-left:20px;line-height:1.55}.gbox li{margin:4px 0}
+.gex,.gchk{margin:14px 0;padding:12px 14px;border-radius:12px;border:2px solid var(--line)}
+.gq{font-weight:600;line-height:1.5;white-space:pre-line}
+.gwhy .note,.gwhy .trap{margin-top:10px;line-height:1.5}
+.gtopics{display:grid;gap:8px;margin-top:14px}
+.gtopic{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:10px 14px;border-radius:14px;border:2px solid transparent;background:var(--opt);text-align:left}
+@media(hover:hover){.gtopic:hover{border-color:var(--accent)}}
+.gi{flex:none;font-size:1.6rem}.gpct{flex:none;font-weight:800;color:var(--gold)}
+.gnum{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--track);font-weight:800}.gnum.done{background:var(--good);color:#fff}
+.gbtn{border-color:var(--good)}.gcheat{width:100%;margin:6px 0 12px}
+
 .lead{font-size:1.05rem;line-height:1.5}
 .steps{margin:6px 0;padding-left:22px;line-height:1.5}.steps li{margin:4px 0}
 .mmex{margin:10px 0;padding:12px;border-radius:12px;background:var(--opt)}.mmexq{font-size:1.15rem;font-variant-numeric:tabular-nums}
@@ -142,6 +157,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <script src="questions.js"></script>
 <script src="generator.js"></script>
 <script src="mentalmath.js"></script>
+<script src="guide.js"></script>
 <script>
 const TOPICS=["Quant","Logical","Verbal","DI","SJT"];
 const TOPIC_NAME={Quant:"Quant",Logical:"Logical",Verbal:"Verbal",DI:"Data (DI)",SJT:"Situational (SJT)"};
@@ -167,7 +183,7 @@ const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayKey(d)};
 function seeded(str){let h=2166136261;for(const c of str)h=Math.imul(h^c.charCodeAt(0),16777619);
   return()=>{h=h+0x6D2B79F5|0;let t=Math.imul(h^h>>>15,1|h);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true,adapt:{},mm:{lv:{},st:{},sprint:0}});
+const DEF=()=>({best:0,xp:0,badges:[],box:{},stats:{},streak:{n:0,last:""},daily:{},theme:"dark",sound:true,adapt:{},mm:{lv:{},st:{},sprint:0},guide:{read:{},chk:{}}});
 function load(){try{return Object.assign(DEF(),JSON.parse(localStorage.getItem("aq"))||{})}catch(e){return DEF()}}
 function save(){try{localStorage.setItem("aq",JSON.stringify(P))}catch(e){}}
 let P=load(),G=null,topic="All",tick;
@@ -330,7 +346,7 @@ function mockResults(up,xp){
   <div class="score"><div class="big">${M.right}/${n}</div><div>${pct}% · time used ${mmss(M.usedFinal)} of ${mmss(MOCK_MS)}${M.timedOut?" (time ran out)":""} · +${xp} XP</div></div>
   <div class="meme ${pct>=65?"good":"bad"}" role="status"><span class="face ${pct>=85?"cool":pct>=65?"happy":pct>=45?"wow":"sad"}"></span><span>${pick(FUN2.mock[band])}</span></div>
   <h3>By topic</h3>${table({headers:["Topic","Score","Accuracy","Avg time"],rows:tps.map(t=>{const r=M.tr[t];return[TOPIC_NAME[t],`${r.r}/${r.n}`,Math.round(r.r/r.n*100)+"%",Math.round(r.ms/r.n/1000)+"s"]})})}
-  ${worst&&M.tr[worst].r<M.tr[worst].n?`<div class="weak"><div><b>🎯 Focus next: ${TOPIC_NAME[worst]}</b><br><small>Your lowest score in this test</small></div><button class="alt" onclick="topic='${worst}';start()">Practise ${worst}</button></div>`:""}
+  ${worst&&M.tr[worst].r<M.tr[worst].n?`<div class="weak"><div><b>🎯 Focus next: ${TOPIC_NAME[worst]}</b><br><small>Your lowest score in this test</small></div><div class="btns"><button class="alt" onclick="topic='${worst}';start()">Practise</button>${GTOP[worst]&&GD.some(T=>T.id===GTOP[worst])?`<button class="alt" onclick="guideTopic('${GTOP[worst]}')">📖 Theory</button>`:""}</div></div>`:""}
   ${G.new.length?`<p>New badges: ${G.new.map(k=>BADGES[k].i+" "+BADGES[k].n).join(", ")}</p>`:""}
   <h3>Full review</h3>
   <div class="chips"><button class="chip on" id="rvAll" onclick="rvFilter(false)">All ${n}</button><button class="chip" id="rvBad" onclick="rvFilter(true)">Mistakes &amp; skipped (${n-M.right})</button></div>
@@ -421,6 +437,7 @@ function mmHub(msg){mmLeaveAll();if(!MMX)return home("The mental math module did
     <div class="card"><div class="big">⚡ ${P.mm.sprint||0}</div><small>best sprint</small></div>
     <div class="card"><div class="big">🎯 ${n?Math.round(r/n*100)+"%":"–"}</div><small>accuracy</small></div>
     <div class="card"><div class="big">🏅 ${mastered}/${all.length}</div><small>mastered</small></div></div>
+  <button class="alt wide gbtn" onclick="guideTopic('mental')">📖 Sổ tay tính nhẩm: học trước khi luyện</button>
   <div class="grid2"><button class="alt" onclick="mmStart('sprint')">⚡ 60-second sprint</button><button class="alt" onclick="mmStart('mixed')">🎯 Mixed drill · 15</button></div>
   ${weak?`<div class="weak"><div><b>Focus: ${esc(weak.t.name)}</b><br><small>${Math.round(mmSt(weak.t.id).r/mmSt(weak.t.id).n*100)}% · ${(mmSt(weak.t.id).t/mmSt(weak.t.id).n).toFixed(1)}s avg</small></div><button class="alt" onclick="mmLesson('${weak.t.id}')">Revise</button></div>`
     :`<div class="weak"><small>New here? Start with "Multiply by 5, 25 and 125", read the lesson, then practise it.</small></div>`}
@@ -511,6 +528,69 @@ function mmResults(){if(!MMS)return;clearInterval(tick);clearTimeout(MMS.fbT);co
   <div class="dock"><div class="btns2"><button class="alt" onclick="mmHub()">Gym</button><button class="main" onclick="mmStart('${S.mode}'${S.id?`,'${S.id}'`:""})">Again 🔁</button></div></div>`;
   scrollTo(0,0);if(up){confetti();SFX.level()}else SFX.badge()}
 
+// ---- Study Guide: bilingual chapters (fastest method, what to remember, traps, worked examples, self-checks) ----
+const GD=window.GUIDE||[];
+const GTOP={Quant:"quant",Logical:"logical",Verbal:"verbal",DI:"di",SJT:"sjt"};
+const gdT=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+const gdP=()=>P.guide||(P.guide={read:{},chk:{}});
+function gdFind(id){for(const T of GD){const i=T.chapters.findIndex(c=>c.id===id);if(i>=0)return{T,C:T.chapters[i],i}}return null}
+const gdNext=list=>{for(const T of list)for(const C of T.chapters)if(!gdP().read[C.id])return{T,C};return null};
+const gdList=items=>items.map(x=>`<li>${gdT(x)}</li>`).join("");
+function guideHub(){mmLeaveAll();if(!GD.length)return home("The study guide didn't load.");
+  const tot=GD.reduce((s,T)=>s+T.chapters.length,0),read=GD.reduce((s,T)=>s+T.chapters.filter(c=>gdP().read[c.id]).length,0),nx=gdNext(GD);
+  $("#app").innerHTML=`<div class="screen">
+  <div class="qhead"><button class="icon" onclick="home()" aria-label="Back to home">✕</button><span class="grow"><b>📖 Study guide</b><br><small>Sổ tay: mẹo, cách giải nhanh nhất, những gì cần nhớ</small></span></div>
+  <div class="row"><b>${read}/${tot} chương đã học</b><span>${Math.round(read/tot*100)}%</span></div>
+  <div class="bar"><div style="width:${read/tot*100}%"></div></div>
+  ${nx?`<div class="weak"><div><b>Tiếp tục: ${esc(nx.C.title)}</b><br><small>${esc(nx.T.icon)} ${esc(nx.C.vi)} · ${nx.C.mins} phút</small></div><button class="alt" onclick="guideChapter('${nx.C.id}')">Học ▶</button></div>`
+      :`<div class="note">🎉 Bạn đã học hết các chương. Trước khi thi, ôn lại bằng Cheat sheet của từng chủ đề.</div>`}
+  <div class="gtopics">${GD.map(T=>{const r=T.chapters.filter(c=>gdP().read[c.id]).length;
+    return`<button class="gtopic" onclick="guideTopic('${T.id}')"><span class="gi" aria-hidden="true">${esc(T.icon)}</span><span class="grow"><b>${esc(T.title)}</b><br><small>${esc(T.vi)} · ${r}/${T.chapters.length} chương</small></span><span class="gpct">${Math.round(r/T.chapters.length*100)}%</span></button>`}).join("")}</div>
+  <p class="small">Mỗi chương: ý tưởng → cách nhanh nhất → cần nhớ → ví dụ giải từng bước → bẫy hay gặp → tự kiểm tra.</p></div>
+  <div class="dock"><button class="main" onclick="guideChapter('${(nx?nx.C:GD[0].chapters[0]).id}')">${nx?"Tiếp tục học ▶":"Ôn lại từ đầu ▶"}</button></div>`;scrollTo(0,0)}
+function guideTopic(id){const T=GD.find(t=>t.id===id);if(!T)return guideHub();mmLeaveAll();const nx=gdNext([T]);
+  $("#app").innerHTML=`<div class="screen gread">
+  <div class="qhead"><button class="icon" onclick="guideHub()" aria-label="Back to the study guide">✕</button><span class="grow"><b>${esc(T.icon)} ${esc(T.title)}</b><br><small>${esc(T.vi)}</small></span></div>
+  <p class="lead">${gdT(T.intro)}</p>
+  <button class="alt wide gcheat" onclick="guideCheat('${T.id}')">📝 Cheat sheet · Tóm tắt những gì cần nhớ</button>
+  <div class="mmlist">${T.chapters.map((C,i)=>{const done=gdP().read[C.id],ch=C.blocks.map((b,k)=>b.t==="check"?gdP().chk[C.id+"#"+k]:undefined).filter(v=>v!==undefined);
+    return`<button class="mmrow" onclick="guideChapter('${C.id}')"><span class="gnum${done?" done":""}">${done?"✓":i+1}</span><span class="grow"><b>${esc(C.title)}</b><br><small>${esc(C.vi)} · ${C.mins} phút${ch.length?` · tự kiểm tra ${ch.filter(Boolean).length}/${ch.length}`:""}</small></span></button>`}).join("")}</div></div>
+  <div class="dock"><button class="main" onclick="guideChapter('${(nx?nx.C:T.chapters[0]).id}')">${nx?(nx.C===T.chapters[0]?"Bắt đầu học ▶":"Học tiếp ▶"):"Ôn lại từ đầu ▶"}</button></div>`;scrollTo(0,0)}
+function guideBlock(C,b,k){
+  if(b.t==="p")return`<p>${gdT(b.text)}</p>`;
+  if(b.t==="fast")return`<div class="gbox fast"><div class="gh">⚡ ${esc(b.title||"Cách nhanh nhất")}</div><ol>${gdList(b.items)}</ol></div>`;
+  if(b.t==="remember")return`<div class="gbox rem"><div class="gh">🧠 ${esc(b.title||"Cần nhớ")}</div><ul>${gdList(b.items)}</ul></div>`;
+  if(b.t==="trap")return`<div class="gbox trapb"><div class="gh">🪤 ${esc(b.title||"Bẫy hay gặp")}</div><ul>${gdList(b.items)}</ul></div>`;
+  if(b.t==="table")return`${b.caption?`<p class="small"><b>${gdT(b.caption)}</b></p>`:""}${table({headers:b.headers,rows:b.rows})}`;
+  if(b.t==="example")return`<div class="gex"><div class="gh">✍️ ${esc(b.title||"Ví dụ")}</div><p class="gq">${gdT(b.q)}</p>
+    <details class="more"><summary>Tự giải trước, rồi bấm để xem lời giải</summary><ol class="steps">${gdList(b.steps)}</ol><p><b>Đáp án:</b> ${gdT(b.answer)}</p>${b.fast?`<div class="tip">⚡ Cách nhanh: ${gdT(b.fast)}</div>`:""}</details></div>`;
+  if(b.t==="check"){const prev=gdP().chk[C.id+"#"+k];
+    return`<div class="gchk" id="gc${k}"><div class="gh">✅ Tự kiểm tra</div><p class="gq">${gdT(b.q)}</p>
+    <div class="opts">${b.o.map((o,j)=>`<button class="opt" onclick="guideCheck('${C.id}',${k},${j})"><kbd>${"ABCD"[j]}</kbd><span>${gdT(o)}</span></button>`).join("")}</div>
+    <div class="gwhy"></div>${prev!==undefined?`<p class="small">Lần trước: ${prev?"đúng ✓":"chưa đúng"}</p>`:""}</div>`}
+  return""}
+function guideChapter(id){const f=gdFind(id);if(!f)return guideHub();mmLeaveAll();const {T,C,i}=f,last=i===T.chapters.length-1,pr=C.practice;
+  $("#app").innerHTML=`<div class="screen gread">
+  <div class="qhead"><button class="icon" onclick="guideTopic('${T.id}')" aria-label="Back to chapters">✕</button><span class="grow"><small>${esc(T.icon)} ${esc(T.title)} · Chương ${i+1}/${T.chapters.length} · ${C.mins} phút</small><br><b>${esc(C.title)}</b> · ${esc(C.vi)}</span></div>
+  ${C.blocks.map((b,k)=>guideBlock(C,b,k)).join("")}
+  ${pr?`<div class="weak"><div><b>🎯 Luyện ngay</b><br><small>${pr.trick?"Luyện mẹo này trong Mental math gym":"Làm câu hỏi "+esc(TOPIC_NAME[pr.topic]||pr.topic)+" (độ khó tự điều chỉnh)"}</small></div>
+    <button class="alt" onclick="${pr.trick?`guideDone('${C.id}');mmLesson('${pr.trick}')`:`guideDone('${C.id}');topic='${pr.topic}';start()`}">Luyện ▶</button></div>`:""}</div>
+  <div class="dock"><div class="btns2"><button class="alt" onclick="guidePrev('${C.id}')" ${i===0?"disabled":""}>◀ Trước</button>
+    <button class="main" onclick="guideNextCh('${C.id}')">${last?"Xong chủ đề ✓":"Xong · Chương tiếp ▶"}</button></div></div>`;scrollTo(0,0)}
+function guideDone(id){gdP().read[id]=true;save()}
+function guideNextCh(id){guideDone(id);SFX.click();const {T,i}=gdFind(id);if(i<T.chapters.length-1)guideChapter(T.chapters[i+1].id);else guideTopic(T.id)}
+function guidePrev(id){const {T,i}=gdFind(id);if(i>0)guideChapter(T.chapters[i-1].id)}
+function guideCheck(cid,k,j){const {C}=gdFind(cid),b=C.blocks[k],box=document.getElementById("gc"+k);if(!box||box.dataset.done)return;box.dataset.done="1";
+  const ok=j===b.a;gdP().chk[cid+"#"+k]=ok;save();
+  box.querySelectorAll(".opt").forEach((x,n)=>{x.disabled=true;if(n===b.a)x.classList.add("good");else if(n===j)x.classList.add("bad")});
+  box.querySelector(".gwhy").innerHTML=`<div class="${ok?"note":"trap"}">${ok?"✓ Chính xác!":"✗ Chưa đúng. Đáp án: <b>"+"ABCD"[b.a]+"</b>."} ${gdT(b.why)}</div>`;
+  if(ok){SFX.good();buzz(20)}else{SFX.bad();buzz([50,40,50])}}
+function guideCheat(id){const T=GD.find(t=>t.id===id);if(!T)return guideHub();mmLeaveAll();
+  $("#app").innerHTML=`<div class="screen gread">
+  <div class="qhead"><button class="icon" onclick="guideTopic('${T.id}')" aria-label="Back to chapters">✕</button><span class="grow"><b>📝 Cheat sheet · ${esc(T.title)}</b><br><small>Tất cả phần "Cần nhớ" và "Cách nhanh nhất" của ${esc(T.vi)}</small></span></div>
+  ${T.chapters.map(C=>`<h3>${esc(C.title)} <small class="small">· ${esc(C.vi)}</small></h3>${C.blocks.filter(b=>b.t==="remember"||b.t==="fast"||b.t==="table").map((b,k)=>guideBlock(C,b,k)).join("")}`).join("")}</div>
+  <div class="dock"><button class="main" onclick="guideTopic('${T.id}')">◀ Về danh sách chương</button></div>`;scrollTo(0,0)}
+
 function home(msg){
   clearInterval(tick);if(MMS)clearTimeout(MMS.fbT);MMS=null;if(G)G.over=true;if(M&&!M.over){mockLeave();saveRun()}M=null;
   const w=weakest(),due=dueKeys().length,dd=P.daily.date===dayKey(),run=loadRun(),al=P.adapt[topic]||1;
@@ -532,6 +612,7 @@ function home(msg){
   <div class="grid2">
     <button class="alt" onclick="start('daily')">📅 Daily${dd?` ✓ ${P.daily.score}/${P.daily.n}`:" challenge"}</button>
     <button class="alt" onclick="start('review')">🔁 Review (${due})</button>
+    <button class="alt wide gbtn" onclick="guideHub()">📖 Study guide · Học mẹo &amp; cách giải nhanh</button>
     <button class="alt wide mmbtn" onclick="mmHub()">🧮 Mental math gym · tricks, drills, sprint</button>
     <button class="alt wide" onclick="startMock()">📝 ${run?"New mock test (replaces saved)":"Mock test · 20 questions · 20 min · no hints"}</button>
     <button class="alt wide" onclick="importScreen()">📥 Import questions${CUSTOM.length?` (${CUSTOM.length} added)`:""}</button></div>
