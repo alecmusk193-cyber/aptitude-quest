@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-11T07:18:50.176Z",
+  "updated": "2026-11-11T07:20:02.203Z",
   "agents": [
     {
       "id": "manager",
@@ -222,10 +222,10 @@ window.AGENT_STATUS = {
       "id": "gw-mental",
       "name": "Guide Writer · Mental math",
       "avatar": "🧮",
-      "state": "checking",
-      "progress": 90,
-      "task": "Verifying numbers",
-      "updated": "2026-11-11T07:18:45.330Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Mental maths + strategy guides done",
+      "updated": "2026-11-11T07:19:34.048Z"
     },
     {
       "id": "gw-quant",
@@ -240,10 +240,10 @@ window.AGENT_STATUS = {
       "id": "gw-dilogic",
       "name": "Guide Writer · DI + Logical",
       "avatar": "📊",
-      "state": "working",
-      "progress": 40,
-      "task": "DI written; starting Logical",
-      "updated": "2026-11-11T07:17:13.851Z"
+      "state": "checking",
+      "progress": 85,
+      "task": "Verifying numbers by script",
+      "updated": "2026-11-11T07:20:02.203Z"
     },
     {
       "id": "gw-verbalsjt",
@@ -259,9 +259,18 @@ window.AGENT_STATUS = {
       "name": "Guide Checker · Quant",
       "avatar": "🔍",
       "state": "checking",
+      "progress": 50,
+      "task": "Checking chapters 6-10",
+      "updated": "2026-11-11T07:19:12.190Z"
+    },
+    {
+      "id": "gfc-mental",
+      "name": "Guide Checker · Mental + Strategy",
+      "avatar": "🔍",
+      "state": "checking",
       "progress": 5,
-      "task": "Reading quant guide",
-      "updated": "2026-11-11T07:18:46.641Z"
+      "task": "Reading mental + strategy",
+      "updated": "2026-11-11T07:20:01.891Z"
     }
   ]
 };
