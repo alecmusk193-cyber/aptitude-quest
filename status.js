@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-11T07:14:40.020Z",
+  "updated": "2026-11-11T07:18:50.176Z",
   "agents": [
     {
       "id": "manager",
@@ -222,37 +222,46 @@ window.AGENT_STATUS = {
       "id": "gw-mental",
       "name": "Guide Writer · Mental math",
       "avatar": "🧮",
-      "state": "working",
-      "progress": 15,
-      "task": "Writing mental maths chapters",
-      "updated": "2026-11-11T07:14:40.020Z"
+      "state": "checking",
+      "progress": 90,
+      "task": "Verifying numbers",
+      "updated": "2026-11-11T07:18:45.330Z"
     },
     {
       "id": "gw-quant",
       "name": "Guide Writer · Quant",
       "avatar": "🔢",
-      "state": "working",
-      "progress": 10,
-      "task": "Drafting chapters",
-      "updated": "2026-11-11T07:14:24.107Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Quant guide: 10 chapters verified",
+      "updated": "2026-11-11T07:18:18.064Z"
     },
     {
       "id": "gw-dilogic",
       "name": "Guide Writer · DI + Logical",
       "avatar": "📊",
       "state": "working",
-      "progress": 5,
-      "task": "Starting DI + Logical guides",
-      "updated": "2026-11-11T07:12:32.919Z"
+      "progress": 40,
+      "task": "DI written; starting Logical",
+      "updated": "2026-11-11T07:17:13.851Z"
     },
     {
       "id": "gw-verbalsjt",
       "name": "Guide Writer · Verbal + SJT",
       "avatar": "📖",
       "state": "working",
+      "progress": 50,
+      "task": "Verbal 5 chapters drafted; writing SJT",
+      "updated": "2026-11-11T07:18:50.176Z"
+    },
+    {
+      "id": "gfc-quant",
+      "name": "Guide Checker · Quant",
+      "avatar": "🔍",
+      "state": "checking",
       "progress": 5,
-      "task": "Starting verbal + SJT guides",
-      "updated": "2026-11-11T07:12:33.012Z"
+      "task": "Reading quant guide",
+      "updated": "2026-11-11T07:18:46.641Z"
     }
   ]
 };
