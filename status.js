@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-11T07:24:33.366Z",
+  "updated": "2026-11-11T07:24:54.416Z",
   "agents": [
     {
       "id": "manager",
@@ -222,10 +222,10 @@ window.AGENT_STATUS = {
       "id": "gw-mental",
       "name": "Guide Writer · Mental math",
       "avatar": "🧮",
-      "state": "working",
-      "progress": 10,
-      "task": "Fixing QA findings",
-      "updated": "2026-11-11T07:23:22.948Z"
+      "state": "done",
+      "progress": 100,
+      "task": "QA fixes applied; both guides VALID",
+      "updated": "2026-11-11T07:24:52.411Z"
     },
     {
       "id": "gw-quant",
@@ -240,10 +240,10 @@ window.AGENT_STATUS = {
       "id": "gw-dilogic",
       "name": "Guide Writer · DI + Logical",
       "avatar": "📊",
-      "state": "working",
-      "progress": 50,
-      "task": "Fixing checker findings",
-      "updated": "2026-11-11T07:24:33.136Z"
+      "state": "done",
+      "progress": 100,
+      "task": "7 checker findings fixed, re-verified",
+      "updated": "2026-11-11T07:24:54.416Z"
     },
     {
       "id": "gw-verbalsjt",
