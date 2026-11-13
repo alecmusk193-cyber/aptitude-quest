@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T10:05:51.058Z",
+  "updated": "2026-11-13T10:08:56.536Z",
   "agents": [
     {
       "id": "manager",
@@ -348,10 +348,10 @@ window.AGENT_STATUS = {
       "id": "cr-mondelez",
       "name": "Researcher · Mondelez Kinh Đô",
       "avatar": "🏢",
-      "state": "working",
-      "progress": 70,
-      "task": "Mở trang chính thức Mondelez (Canva, values)",
-      "updated": "2026-11-13T10:05:51.058Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Mondelez TTF MT 2027 – cập nhật từ trang chính thức, VALID",
+      "updated": "2026-11-13T10:08:56.536Z"
     }
   ]
 };
