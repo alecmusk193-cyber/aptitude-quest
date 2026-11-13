@@ -642,6 +642,7 @@ function coPage(id){const c=CO.find(x=>x.id===id);if(!c)return coHub();mmLeaveAl
   ${list("Điều kiện ứng tuyển",c.eligibility)}
   ${list("Các mảng tuyển",c.functions)}
   ${c.stages&&c.stages.length?`<h3>Các vòng tuyển</h3><ol class="costages">${c.stages.map(s=>`<li><b>${esc(s.name)}</b> ${coTag(s.basis)}${coSrc(c,s.src)}<br>${gdT(s.what)}${s.tips&&s.tips.length?`<ul class="cotips">${s.tips.map(t=>`<li>💡 ${gdT(t)}</li>`).join("")}</ul>`:""}</li>`).join("")}</ol>`:""}
+  ${c.history&&c.history.length?`<details class="more"><summary>🕰️ Lịch sử chương trình (không còn áp dụng)</summary><ul class="coul">${c.history.map(x=>coItem(c,x)).join("")}</ul></details>`:""}
   ${c.tests&&c.tests.length?`<h3>Bài test</h3>${c.tests.map(t=>`<div class="gex"><div class="gh">🧪 ${esc(t.name)} ${coTag(t.basis)}${coSrc(c,t.src)}</div>${t.provider?`<p class="small">Nhà cung cấp: ${esc(t.provider)}</p>`:""}<p>${gdT(t.format)}</p></div>`).join("")}`:""}
   ${c.values&&c.values.items&&c.values.items.length?`<div class="gbox rem"><div class="gh">🧭 ${esc(c.values.name||"Giá trị / năng lực")} ${coTag(c.values.basis)}${coSrc(c,c.values.src)}</div><ul>${c.values.items.map(v=>`<li>${gdT(v)}</li>`).join("")}</ul><p class="small">Dùng những giá trị này làm khung cho câu trả lời phỏng vấn (kể chuyện theo STAR) và cho bài SJT.</p></div>`:""}
   ${c.prep&&c.prep.length?`<div class="gbox"><div class="gh">📋 Lộ trình chuẩn bị</div><ol>${c.prep.map(p=>`<li>${gdT(p)}</li>`).join("")}</ol></div>`:""}
