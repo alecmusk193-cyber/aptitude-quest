@@ -616,6 +616,7 @@ function guideCheat(id){const T=GD.find(t=>t.id===id);if(!T)return guideHub();mm
 
 // ---- Company prep: sourced profiles of Management Trainee programmes + company-style mock tests ----
 const CO=window.COMPANIES||[];
+const coDraft=()=>window.COMPANIES_DRAFT?`<div class="note warnb">⚠️ <b>Đang kiểm chứng (${esc(window.COMPANIES_DRAFT)})</b>: một số thông tin dưới đây có thể chưa chính xác hoặc đã cũ. Bản đã kiểm chứng sẽ được cập nhật sớm; trước khi nộp đơn, hãy đối chiếu với trang tuyển dụng chính thức.</div>`:"";
 const BASIS={official:["Chính thức","b-off","Công ty công bố"],reported:["Ứng viên chia sẻ","b-rep","Theo trải nghiệm ứng viên, có thể khác năm nay"],general:["Thông lệ chung","b-gen","Điển hình cho chương trình MT, không riêng công ty này"]};
 const coTag=b=>{const x=BASIS[b];return x?`<span class="btag ${x[1]}" title="${x[2]}">${x[0]}</span>`:""};
 const coSrc=(c,src)=>(src||[]).filter(i=>c.sources&&c.sources[i]).map(i=>`<a class="srcref" href="#src-${c.id}-${i}" onclick="event.preventDefault();const el=document.getElementById('src-${c.id}-${i}');if(el){el.scrollIntoView({block:'center'});el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1200)}">[${i+1}]</a>`).join("");
@@ -626,6 +627,7 @@ function coHub(){mmLeaveAll();if(!CO.length)return home("Company profiles didn't
   $("#app").innerHTML=`<div class="screen">
   <div class="qhead"><button class="icon" onclick="home()" aria-label="Back to home">✕</button><span class="grow"><b>🏢 Company prep</b><br><small>Ôn theo từng chương trình Management Trainee</small></span></div>
   <div class="note">ℹ️ Tổng hợp từ nguồn công khai (trang tuyển dụng, báo chí, chia sẻ của ứng viên). <b>Không phải tài liệu chính thức</b> và không liên kết với các công ty. Quy trình thay đổi theo từng năm, nên luôn kiểm tra trang tuyển dụng chính thức trước khi nộp.</div>
+  ${coDraft()}
   <p class="small">Nhãn: ${coTag("official")} ${coTag("reported")} ${coTag("general")} · số [1] dẫn tới nguồn ở cuối trang.</p>
   ${inds.map(ind=>`<h3>${esc(ind)}</h3><div class="gtopics">${CO.filter(c=>c.industry===ind).map(c=>`<button class="gtopic" onclick="coPage('${c.id}')"><span class="grow"><b>${esc(c.name)}</b><br><small>${esc(c.program)}</small><br><small class="small clamp2">🗓️ ${esc((c.intake&&c.intake.text)||"")}</small></span><span aria-hidden="true">›</span></button>`).join("")}</div>`).join("")}
   <p class="small">Cập nhật lần cuối: ${esc(CO.map(c=>c.lastChecked).sort().pop()||"")}.</p></div>
@@ -634,6 +636,7 @@ function coPage(id){const c=CO.find(x=>x.id===id);if(!c)return coHub();mmLeaveAl
   const list=(title,arr)=>arr&&arr.length?`<h3>${title}</h3><ul class="coul">${arr.map(x=>coItem(c,x)).join("")}</ul>`:"";
   $("#app").innerHTML=`<div class="screen gread">
   <div class="qhead"><button class="icon" onclick="coHub()" aria-label="Back to companies">✕</button><span class="grow"><b>${esc(c.name)}</b><br><small>${esc(c.program)}</small></span></div>
+  ${coDraft()}
   <p class="lead">${gdT(c.summary)}</p>
   ${c.intake?`<div class="gbox fast"><div class="gh">🗓️ Thời gian tuyển</div>${gdT(c.intake.text)} ${coTag(c.intake.basis)}${coSrc(c,c.intake.src)}</div>`:""}
   ${list("Điều kiện ứng tuyển",c.eligibility)}

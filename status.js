@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:48:45.782Z",
+  "updated": "2026-11-13T06:51:05.536Z",
   "agents": [
     {
       "id": "manager",
@@ -294,10 +294,10 @@ window.AGENT_STATUS = {
       "id": "cr-global1",
       "name": "Researcher · Unilever, P&G, Nestlé",
       "avatar": "🏢",
-      "state": "done",
-      "progress": 100,
-      "task": "Hoàn tất global1.json (Unilever, P&G, Nestlé)",
-      "updated": "2026-11-13T06:28:25.735Z"
+      "state": "working",
+      "progress": 10,
+      "task": "Sửa 23 lỗi QA",
+      "updated": "2026-11-13T06:51:05.536Z"
     },
     {
       "id": "cr-global2",
@@ -321,28 +321,28 @@ window.AGENT_STATUS = {
       "id": "cv-global1",
       "name": "Verifier · Unilever, P&G, Nestlé",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 60,
-      "task": "Checking Nestlé sources",
-      "updated": "2026-11-13T06:48:07.592Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Verification complete",
+      "updated": "2026-11-13T06:50:09.452Z"
     },
     {
       "id": "cv-local",
       "name": "Verifier · Vietnamese companies",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 30,
-      "task": "Vinamilk done; checking Techcombank",
-      "updated": "2026-11-13T06:46:48.542Z"
+      "state": "done",
+      "progress": 100,
+      "task": "33 findings written",
+      "updated": "2026-11-13T06:50:38.163Z"
     },
     {
       "id": "cv-global2",
       "name": "Verifier · Heineken, PepsiCo, FrieslandCampina",
       "avatar": "🔍",
       "state": "checking",
-      "progress": 65,
-      "task": "Checking FrieslandCampina sources",
-      "updated": "2026-11-13T06:48:45.782Z"
+      "progress": 85,
+      "task": "Writing findings",
+      "updated": "2026-11-13T06:50:30.387Z"
     }
   ]
 };
