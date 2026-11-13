@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:51:05.536Z",
+  "updated": "2026-11-13T06:52:18.070Z",
   "agents": [
     {
       "id": "manager",
@@ -312,10 +312,10 @@ window.AGENT_STATUS = {
       "id": "cr-local",
       "name": "Researcher · Vietnamese companies",
       "avatar": "🏢",
-      "state": "done",
-      "progress": 100,
-      "task": "Xong 4 hồ sơ: Vinamilk, Techcombank, VPBank, Masan",
-      "updated": "2026-11-13T06:27:06.357Z"
+      "state": "working",
+      "progress": 10,
+      "task": "Sửa 31 phát hiện QA",
+      "updated": "2026-11-13T06:52:17.289Z"
     },
     {
       "id": "cv-global1",
@@ -339,10 +339,10 @@ window.AGENT_STATUS = {
       "id": "cv-global2",
       "name": "Verifier · Heineken, PepsiCo, FrieslandCampina",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 85,
-      "task": "Writing findings",
-      "updated": "2026-11-13T06:50:30.387Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Verified 3 profiles: 30 findings",
+      "updated": "2026-11-13T06:52:18.070Z"
     }
   ]
 };
