@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T10:08:56.536Z",
+  "updated": "2026-11-13T10:13:29.269Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
-      "state": "working",
-      "task": "Adding Mondelez Kinh Đô",
-      "progress": 10,
-      "updated": "2026-11-13T09:48:31.582Z"
+      "state": "done",
+      "task": "Mondelez added and verified (11 companies)",
+      "progress": 100,
+      "updated": "2026-11-13T10:13:29.269Z"
     },
     {
       "id": "qw-quant",
@@ -352,6 +352,15 @@ window.AGENT_STATUS = {
       "progress": 100,
       "task": "Mondelez TTF MT 2027 – cập nhật từ trang chính thức, VALID",
       "updated": "2026-11-13T10:08:56.536Z"
+    },
+    {
+      "id": "cv-mondelez",
+      "name": "Verifier · Mondelez",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "9 findings (1 unsupported, 8 minor)",
+      "updated": "2026-11-13T10:12:27.610Z"
     }
   ]
 };
