@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:45:54.301Z",
+  "updated": "2026-11-13T06:48:45.782Z",
   "agents": [
     {
       "id": "manager",
@@ -322,27 +322,27 @@ window.AGENT_STATUS = {
       "name": "Verifier · Unilever, P&G, Nestlé",
       "avatar": "🔍",
       "state": "checking",
-      "progress": 5,
-      "task": "Reading profiles",
-      "updated": "2026-11-13T06:45:43.651Z"
+      "progress": 60,
+      "task": "Checking Nestlé sources",
+      "updated": "2026-11-13T06:48:07.592Z"
     },
     {
       "id": "cv-local",
       "name": "Verifier · Vietnamese companies",
       "avatar": "🔍",
       "state": "checking",
-      "progress": 5,
-      "task": "Reading local.json",
-      "updated": "2026-11-13T06:45:44.064Z"
+      "progress": 30,
+      "task": "Vinamilk done; checking Techcombank",
+      "updated": "2026-11-13T06:46:48.542Z"
     },
     {
       "id": "cv-global2",
       "name": "Verifier · Heineken, PepsiCo, FrieslandCampina",
       "avatar": "🔍",
       "state": "checking",
-      "progress": 5,
-      "task": "Fetching Heineken sources",
-      "updated": "2026-11-13T06:45:54.301Z"
+      "progress": 65,
+      "task": "Checking FrieslandCampina sources",
+      "updated": "2026-11-13T06:48:45.782Z"
     }
   ]
 };
