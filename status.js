@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:54:44.918Z",
+  "updated": "2026-11-13T06:57:06.681Z",
   "agents": [
     {
       "id": "manager",
@@ -303,19 +303,19 @@ window.AGENT_STATUS = {
       "id": "cr-global2",
       "name": "Researcher · Heineken, Suntory PepsiCo, FrieslandCampina, Coca-Cola",
       "avatar": "🏢",
-      "state": "working",
-      "progress": 50,
-      "task": "Đã đọc lại trang chính thức; đang viết lại JSON",
-      "updated": "2026-11-13T06:54:44.918Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Đã sửa 30 phát hiện QA; VALID",
+      "updated": "2026-11-13T06:56:42.505Z"
     },
     {
       "id": "cr-local",
       "name": "Researcher · Vietnamese companies",
       "avatar": "🏢",
-      "state": "working",
-      "progress": 10,
-      "task": "Sửa 31 phát hiện QA",
-      "updated": "2026-11-13T06:52:17.289Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Đã sửa 31 phát hiện QA; local.json VALID",
+      "updated": "2026-11-13T06:56:30.838Z"
     },
     {
       "id": "cv-global1",
@@ -330,10 +330,10 @@ window.AGENT_STATUS = {
       "id": "cv-local",
       "name": "Verifier · Vietnamese companies",
       "avatar": "🔍",
-      "state": "done",
-      "progress": 100,
-      "task": "33 findings written",
-      "updated": "2026-11-13T06:50:38.163Z"
+      "state": "checking",
+      "progress": 10,
+      "task": "Re-checking local.json",
+      "updated": "2026-11-13T06:57:06.681Z"
     },
     {
       "id": "cv-global2",
