@@ -110,6 +110,7 @@ details.rv summary .grow{flex:1;min-width:0;font-weight:500;font-size:.92rem}
 .gnum{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--track);font-weight:800}.gnum.done{background:var(--good);color:#fff}
 .gbtn{border-color:var(--good)}
 .cobtn{border-color:#4dd0ff}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .btag{display:inline-block;margin:0 2px;padding:1px 7px;border-radius:99px;font-size:.72rem;font-weight:700;vertical-align:middle;white-space:nowrap}
 .b-off{background:var(--goodbg);color:var(--text);border:1px solid var(--good)}.b-rep{background:var(--opt);border:1px solid var(--gold)}.b-gen{background:var(--opt);border:1px solid var(--line)}
 .srcref{margin-left:2px;font-size:.78rem;color:var(--accent);text-decoration:none;font-weight:700}
@@ -626,7 +627,7 @@ function coHub(){mmLeaveAll();if(!CO.length)return home("Company profiles didn't
   <div class="qhead"><button class="icon" onclick="home()" aria-label="Back to home">✕</button><span class="grow"><b>🏢 Company prep</b><br><small>Ôn theo từng chương trình Management Trainee</small></span></div>
   <div class="note">ℹ️ Tổng hợp từ nguồn công khai (trang tuyển dụng, báo chí, chia sẻ của ứng viên). <b>Không phải tài liệu chính thức</b> và không liên kết với các công ty. Quy trình thay đổi theo từng năm, nên luôn kiểm tra trang tuyển dụng chính thức trước khi nộp.</div>
   <p class="small">Nhãn: ${coTag("official")} ${coTag("reported")} ${coTag("general")} · số [1] dẫn tới nguồn ở cuối trang.</p>
-  ${inds.map(ind=>`<h3>${esc(ind)}</h3><div class="gtopics">${CO.filter(c=>c.industry===ind).map(c=>`<button class="gtopic" onclick="coPage('${c.id}')"><span class="grow"><b>${esc(c.name)}</b><br><small>${esc(c.program)}</small><br><small class="small">${esc((c.intake&&c.intake.text)||"")}</small></span><span aria-hidden="true">›</span></button>`).join("")}</div>`).join("")}
+  ${inds.map(ind=>`<h3>${esc(ind)}</h3><div class="gtopics">${CO.filter(c=>c.industry===ind).map(c=>`<button class="gtopic" onclick="coPage('${c.id}')"><span class="grow"><b>${esc(c.name)}</b><br><small>${esc(c.program)}</small><br><small class="small clamp2">🗓️ ${esc((c.intake&&c.intake.text)||"")}</small></span><span aria-hidden="true">›</span></button>`).join("")}</div>`).join("")}
   <p class="small">Cập nhật lần cuối: ${esc(CO.map(c=>c.lastChecked).sort().pop()||"")}.</p></div>
   <div class="dock"><button class="main" onclick="home()">◀ Home</button></div>`;scrollTo(0,0)}
 function coPage(id){const c=CO.find(x=>x.id===id);if(!c)return coHub();mmLeaveAll();const m=c.mock;

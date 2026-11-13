@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:27:06.357Z",
+  "updated": "2026-11-13T06:45:54.301Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
       "state": "working",
-      "task": "Company prep: briefing 3 researchers",
-      "progress": 5,
-      "updated": "2026-11-13T06:22:30.467Z"
+      "task": "Verifying 10 company profiles against sources",
+      "progress": 60,
+      "updated": "2026-11-13T06:45:36.740Z"
     },
     {
       "id": "qw-quant",
@@ -294,10 +294,10 @@ window.AGENT_STATUS = {
       "id": "cr-global1",
       "name": "Researcher · Unilever, P&G, Nestlé",
       "avatar": "🏢",
-      "state": "working",
-      "progress": 80,
-      "task": "Viết global1.json",
-      "updated": "2026-11-13T06:26:05.575Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Hoàn tất global1.json (Unilever, P&G, Nestlé)",
+      "updated": "2026-11-13T06:28:25.735Z"
     },
     {
       "id": "cr-global2",
@@ -316,6 +316,33 @@ window.AGENT_STATUS = {
       "progress": 100,
       "task": "Xong 4 hồ sơ: Vinamilk, Techcombank, VPBank, Masan",
       "updated": "2026-11-13T06:27:06.357Z"
+    },
+    {
+      "id": "cv-global1",
+      "name": "Verifier · Unilever, P&G, Nestlé",
+      "avatar": "🔍",
+      "state": "checking",
+      "progress": 5,
+      "task": "Reading profiles",
+      "updated": "2026-11-13T06:45:43.651Z"
+    },
+    {
+      "id": "cv-local",
+      "name": "Verifier · Vietnamese companies",
+      "avatar": "🔍",
+      "state": "checking",
+      "progress": 5,
+      "task": "Reading local.json",
+      "updated": "2026-11-13T06:45:44.064Z"
+    },
+    {
+      "id": "cv-global2",
+      "name": "Verifier · Heineken, PepsiCo, FrieslandCampina",
+      "avatar": "🔍",
+      "state": "checking",
+      "progress": 5,
+      "task": "Fetching Heineken sources",
+      "updated": "2026-11-13T06:45:54.301Z"
     }
   ]
 };
