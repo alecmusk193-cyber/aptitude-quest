@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-11T07:28:58.907Z",
+  "updated": "2026-11-13T06:51:05.536Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
-      "state": "done",
-      "task": "Study guide shipped: 41 chapters, fact-checked",
-      "progress": 100,
-      "updated": "2026-11-11T07:28:58.907Z"
+      "state": "working",
+      "task": "Verifying 10 company profiles against sources",
+      "progress": 60,
+      "updated": "2026-11-13T06:45:36.740Z"
     },
     {
       "id": "qw-quant",
@@ -289,6 +289,60 @@ window.AGENT_STATUS = {
       "progress": 100,
       "task": "verbalsjt: 9 issues",
       "updated": "2026-11-11T07:24:33.366Z"
+    },
+    {
+      "id": "cr-global1",
+      "name": "Researcher · Unilever, P&G, Nestlé",
+      "avatar": "🏢",
+      "state": "working",
+      "progress": 10,
+      "task": "Sửa 23 lỗi QA",
+      "updated": "2026-11-13T06:51:05.536Z"
+    },
+    {
+      "id": "cr-global2",
+      "name": "Researcher · Heineken, Suntory PepsiCo, FrieslandCampina, Coca-Cola",
+      "avatar": "🏢",
+      "state": "done",
+      "progress": 100,
+      "task": "Xong: Heineken, Suntory PepsiCo, FrieslandCampina; bỏ Coca-Cola (không có đợt gần đây)",
+      "updated": "2026-11-13T06:26:43.571Z"
+    },
+    {
+      "id": "cr-local",
+      "name": "Researcher · Vietnamese companies",
+      "avatar": "🏢",
+      "state": "done",
+      "progress": 100,
+      "task": "Xong 4 hồ sơ: Vinamilk, Techcombank, VPBank, Masan",
+      "updated": "2026-11-13T06:27:06.357Z"
+    },
+    {
+      "id": "cv-global1",
+      "name": "Verifier · Unilever, P&G, Nestlé",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "Verification complete",
+      "updated": "2026-11-13T06:50:09.452Z"
+    },
+    {
+      "id": "cv-local",
+      "name": "Verifier · Vietnamese companies",
+      "avatar": "🔍",
+      "state": "done",
+      "progress": 100,
+      "task": "33 findings written",
+      "updated": "2026-11-13T06:50:38.163Z"
+    },
+    {
+      "id": "cv-global2",
+      "name": "Verifier · Heineken, PepsiCo, FrieslandCampina",
+      "avatar": "🔍",
+      "state": "checking",
+      "progress": 85,
+      "task": "Writing findings",
+      "updated": "2026-11-13T06:50:30.387Z"
     }
   ]
 };
