@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:24:59.127Z",
+  "updated": "2026-11-13T06:27:06.357Z",
   "agents": [
     {
       "id": "manager",
@@ -295,27 +295,27 @@ window.AGENT_STATUS = {
       "name": "Researcher · Unilever, P&G, Nestlé",
       "avatar": "🏢",
       "state": "working",
-      "progress": 60,
-      "task": "Xong P&G; đang nghiên cứu Nestlé",
-      "updated": "2026-11-13T06:24:59.127Z"
+      "progress": 80,
+      "task": "Viết global1.json",
+      "updated": "2026-11-13T06:26:05.575Z"
     },
     {
       "id": "cr-global2",
       "name": "Researcher · Heineken, Suntory PepsiCo, FrieslandCampina, Coca-Cola",
       "avatar": "🏢",
-      "state": "working",
-      "progress": 60,
-      "task": "Đã tra cứu 4 công ty; đang viết JSON",
-      "updated": "2026-11-13T06:24:46.340Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Xong: Heineken, Suntory PepsiCo, FrieslandCampina; bỏ Coca-Cola (không có đợt gần đây)",
+      "updated": "2026-11-13T06:26:43.571Z"
     },
     {
       "id": "cr-local",
       "name": "Researcher · Vietnamese companies",
       "avatar": "🏢",
-      "state": "working",
-      "progress": 60,
-      "task": "Đã nghiên cứu Vinamilk, Techcombank, VPBank, Masan; đang viết JSON",
-      "updated": "2026-11-13T06:24:45.804Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Xong 4 hồ sơ: Vinamilk, Techcombank, VPBank, Masan",
+      "updated": "2026-11-13T06:27:06.357Z"
     }
   ]
 };
