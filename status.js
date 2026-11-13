@@ -1,6 +1,6 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:52:18.070Z",
+  "updated": "2026-11-13T06:53:04.373Z",
   "agents": [
     {
       "id": "manager",
@@ -303,10 +303,10 @@ window.AGENT_STATUS = {
       "id": "cr-global2",
       "name": "Researcher · Heineken, Suntory PepsiCo, FrieslandCampina, Coca-Cola",
       "avatar": "🏢",
-      "state": "done",
-      "progress": 100,
-      "task": "Xong: Heineken, Suntory PepsiCo, FrieslandCampina; bỏ Coca-Cola (không có đợt gần đây)",
-      "updated": "2026-11-13T06:26:43.571Z"
+      "state": "working",
+      "progress": 10,
+      "task": "Sửa theo 30 phát hiện QA",
+      "updated": "2026-11-13T06:53:04.373Z"
     },
     {
       "id": "cr-local",
