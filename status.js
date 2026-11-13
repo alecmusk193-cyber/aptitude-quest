@@ -1,15 +1,15 @@
 // Written by agents when they start/finish a task. Read by office.html every 2s.
 window.AGENT_STATUS = {
-  "updated": "2026-11-13T06:57:41.005Z",
+  "updated": "2026-11-13T09:37:41.690Z",
   "agents": [
     {
       "id": "manager",
       "name": "Manager / QA",
       "avatar": "🧑‍💼",
-      "state": "working",
-      "task": "Verifying 10 company profiles against sources",
-      "progress": 60,
-      "updated": "2026-11-13T06:45:36.740Z"
+      "state": "done",
+      "task": "Company prep verified: 10 profiles",
+      "progress": 100,
+      "updated": "2026-11-13T09:37:41.690Z"
     },
     {
       "id": "qw-quant",
@@ -339,10 +339,10 @@ window.AGENT_STATUS = {
       "id": "cv-global2",
       "name": "Verifier · Heineken, PepsiCo, FrieslandCampina",
       "avatar": "🔍",
-      "state": "checking",
-      "progress": 10,
-      "task": "Re-checking global2 fixes",
-      "updated": "2026-11-13T06:57:33.094Z"
+      "state": "done",
+      "progress": 100,
+      "task": "Re-check: 30/30 resolved, 1 new minor",
+      "updated": "2026-11-13T09:36:56.416Z"
     }
   ]
 };
